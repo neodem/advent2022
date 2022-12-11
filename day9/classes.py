@@ -4,16 +4,17 @@ from common import Point
 class Plot:
     overlays = []
 
-    def __init__(self, width, height, origin_x=None, origin_y=None):
+    # origin values are down and right from the top left
+    def __init__(self, width, height, org_down=None, org_right=None):
         self.width = width
         self.height = height
-        if origin_x:
-            self.x_offset = origin_x
+        if org_right is not None:
+            self.x_offset = org_right
         else:
             self.x_offset = int(width / 2)
 
-        if origin_y:
-            self.y_offset = origin_y
+        if org_down is not None:
+            self.y_offset = org_down
         else:
             self.y_offset = int(height / 2)
 

@@ -61,3 +61,13 @@ def move_link(previous_link, link_loc, direction):
         print("move {}: {}, {} moves from {} to {}".format(link_loc.name, previous_link.display(), link_loc.name,
                                                            temp_loc, link_loc))
     return link_loc
+
+# width/height are relative to origin at center
+def draw_plot(width, height):
+    display = [['.' * width] * height]
+
+
+    #draw dots
+    for row in range(height):
+        print(display[row])
+

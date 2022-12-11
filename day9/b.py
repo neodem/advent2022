@@ -2,16 +2,6 @@ import common
 import functions
 from common import Point
 
-head_location = Point(0, 0, "head")
-link_locations = [Point(0, 0, str(i + 1)) for i in range(9)]
-link_locations[8].name = "tail"
-tail_visits = set()
-
-filename = "testb.dat"
-commands = common.read_file_as_lines(filename)
-
-print("START: {}, {}".format(head_location.display(), link_locations[8].display()))
-
 
 def move_links(head_loc, link_locs, direc):
     prev_loc = head_loc
@@ -21,6 +11,16 @@ def move_links(head_loc, link_locs, direc):
         prev_loc = link
         index = index + 1
 
+
+head_location = Point(0, 0, "head")
+link_locations = [Point(0, 0, str(i + 1)) for i in range(9)]
+link_locations[8].name = "tail"
+tail_visits = set()
+
+filename = "testb.dat"
+commands = common.read_file_as_lines(filename)
+
+print("START: {}, {}".format(head_location.display(), link_locations[8].display()))
 
 for command in commands:
     print(command)

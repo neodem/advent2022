@@ -6,7 +6,7 @@ from common import Point
 head_location = Point(0, 0, "head", "H")
 tail_location = Point(0, 0, "tail", "T")
 tail_visits = set()
-p = Plot(20, 20)
+p = Plot(15, 15, 2, 10)
 p.add_location(tail_location)
 p.add_location(head_location)
 

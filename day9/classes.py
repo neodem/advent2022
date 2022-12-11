@@ -1,12 +1,23 @@
-class Plot:
-    locations = []
+from common import Point
 
-    def __init__(self, width, height):
+
+class Plot:
+    overlays = []
+
+    def __init__(self, width, height, origin_x=None, origin_y=None):
         self.width = width
         self.height = height
-        self.display = [['.'] * width for i in range(height)]
-        self.x_offset = int(width / 2)
-        self.y_offset = int(height / 2)
+        if origin_x:
+            self.x_offset = origin_x
+        else:
+            self.x_offset = int(width / 2)
+
+        if origin_y:
+            self.y_offset = origin_y
+        else:
+            self.y_offset = int(height / 2)
+
+        self.display = [['.'] * self.width for i in range(self.height)]
         self.display[self.y_offset][self.x_offset] = '+'
 
     def reset_display(self):
@@ -16,8 +27,10 @@ class Plot:
     def print_plot(self, spacing=0):
         self.reset_display()
 
-        for location in self.locations:
-            self.set_point_from_location(location)
+        for location in self.overlays:
+            row = self.y_offset - location.y
+            col = location.x + self.x_offset
+            self.display[row][col] = location.id
 
         for row in range(self.height):
             for col in range(self.width):
@@ -27,19 +40,8 @@ class Plot:
             print()
 
     def add_location(self, location):
-        self.locations.append(location)
-
-    def set_point_from_location(self, location):
-        row = self.y_offset - location.y
-        col = location.x + self.x_offset
-        self.display[row][col] = location.id
+        self.overlays.append(location)
 
     def set_point(self, x, y, id):
-        row = self.y_offset - y
-        col = x + self.x_offset
-        self.display[row][col] = id
-
-    def reset_point(self, x, y):
-        row = y + self.y_offset
-        col = x + self.x_offset
-        self.display[row][col] = '.'
+        p = Point(x, y, "", id)
+        self.overlays.append(p)

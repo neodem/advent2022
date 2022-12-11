@@ -61,6 +61,26 @@ class FixedList:
         return self.data.size()
 
 
+class Point:
+    x = 0
+    y = 0
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __hash__(self): return hash(id(self))
+
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if isinstance(other, Point):
+            return self.x == other.x and self.y == other.y
+        return NotImplemented
+
+    def __str__(self):
+        return "[{},{}]".format(self.x, self.y)
+
+
 def read_file_as_lines(filename):
     lines = []
     with open(filename) as file:

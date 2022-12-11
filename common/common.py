@@ -62,14 +62,12 @@ class FixedList:
 
 
 class Point:
-    x = 0
-    y = 0
-    name = ""
 
-    def __init__(self, x, y, name=""):
+    def __init__(self, x, y, name="", id=""):
         self.x = x
         self.y = y
         self.name = name
+        self.id = id
 
     def __hash__(self):
         return hash(self.__str__())

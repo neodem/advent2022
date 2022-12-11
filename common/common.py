@@ -64,10 +64,12 @@ class FixedList:
 class Point:
     x = 0
     y = 0
+    name = ""
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, name=""):
         self.x = x
         self.y = y
+        self.name = name
 
     def __hash__(self):
         return hash(self.__str__())
@@ -80,6 +82,26 @@ class Point:
 
     def __str__(self):
         return "[{},{}]".format(self.x, self.y)
+
+    def copy(self):
+        return Point(self.x, self.y, self.name)
+
+    def display(self):
+        return "{} is at [{},{}]".format(self.name, self.x, self.y)
+
+    def move_point(self, direction):
+        if direction == 'L':
+            self.x = self.x - 1
+        elif direction == 'R':
+            self.x = self.x + 1
+        elif direction == 'U':
+            self.y = self.y + 1
+        elif direction == 'D':
+            self.y = self.y - 1
+
+    def move_to(self, x, y):
+        self.x = x
+        self.y = y
 
 
 def read_file_as_lines(filename):

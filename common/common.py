@@ -69,7 +69,8 @@ class Point:
         self.x = x
         self.y = y
 
-    def __hash__(self): return hash(id(self))
+    def __hash__(self):
+        return hash(self.__str__())
 
     def __eq__(self, other):
         """Overrides the default implementation"""

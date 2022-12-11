@@ -76,7 +76,7 @@ head_location = Point(0, 0)
 tail_location = Point(0, 0)
 tail_visits = set()
 
-filename = "test.dat"
+filename = "input.dat"
 commands = common.read_file_as_lines(filename)
 
 print("START: head is at {}, tail is at {}".format(head_location, tail_location))

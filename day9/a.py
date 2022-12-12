@@ -23,12 +23,11 @@ for command in commands:
 
     for index in range(distance):
         print("-")
+        prev_head_loc = head_location.copy()
         head_location.move_point(direc)
-        print("move {}: {}, {}".format(head_location.name, head_location.display(), tail_location.display()))
+        print("move {} {}: from {} to {}.".format(head_location.name, direc, prev_head_loc, head_location))
         tail_location = functions.move_link(head_location, tail_location, direc)
         tail_visits.add(tail_location)
+        p.print_plot(1)
         print("unique tail visit count: {}".format(len(tail_visits)))
-
-    p.print_plot(1)
-    print()
 

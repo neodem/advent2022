@@ -4,13 +4,11 @@ from common import Point
 from common import Plot
 
 
-def move_links(head_loc, link_locs, direc):
+def move_links(head_loc, link_locs):
     prev_loc = head_loc
-    index = 0
     for link in link_locs:
-        functions.move_link(prev_loc, link, direc)
+        functions.move_link(prev_loc, link)
         prev_loc = link
-        index = index + 1
 
 
 head_location = Point(0, 0, "head", "H")
@@ -19,12 +17,12 @@ link_locations[8].name = "tail"
 link_locations[8].id = "T"
 tail_visits = set()
 
-p = Plot(15, 15, 13, 2)
+p = Plot(50, 50, 20, 20)
 for link_location in link_locations:
     p.add_location(link_location)
 p.add_location(head_location)
 
-filename = "test.dat"
+filename = "testb.dat"
 commands = common.read_file_as_lines(filename)
 
 print("START: {}, {}".format(head_location.display(), link_locations[8].display()))
@@ -41,9 +39,10 @@ for command in commands:
         prev_head_loc = head_location.copy()
         head_location.move_point(direc)
         print("move {} {}: from {} to {}.".format(head_location.name, direc, prev_head_loc, head_location))
-        move_links(head_location, link_locations, direc)
+        move_links(head_location, link_locations)
         tail_visits.add(link_locations[8])
-        p.print_plot(1)
+        # p.print_plot(1)
         print("unique tail visit count: {}".format(len(tail_visits)))
 
     print()
+    p.print_plot(1)

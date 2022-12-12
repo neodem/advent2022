@@ -45,6 +45,12 @@ class CPU:
         if self.current_command.command_type == Command_Type.NOOP:
             self.in_command = False
 
+    def report(self):
+        if self.current_command.command_type == Command_Type.ADDX and self.clock_cycle == 0:
+            return "begin executing {}".format(self.current_command)
+        if self.current_command.command_type == Command_Type.ADDX and self.clock_cycle == 2:
+            return "finish executing {} (Register X is now {})".format(self.current_command, self.register)
+
     def get_register(self):
         return self.register
 
@@ -64,6 +70,10 @@ class CRT:
         row_index = position // self.width
         col_index = position - (row_index * self.width)
         self.display[row_index][col_index] = character
+
+    def get_row_string(self, position):
+        row_index = position // self.width
+        return ''.join(self.display[row_index])
 
     def draw(self):
         for row in range(self.height):

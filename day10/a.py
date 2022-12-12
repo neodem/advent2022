@@ -2,9 +2,9 @@ import common
 from classes import CPU
 import functions
 
-filename = "data.dat"
+filename = "test_b.dat"
 commands = common.read_file_as_lines(filename)
-cycle_count = 0
+cycle_count = 1
 cpu = CPU()
 ss = {}
 
@@ -14,10 +14,10 @@ def do_cycle():
     cycle_count = cycle_count + 1
     cpu.cycle_clock()
     if functions.record_data(cycle_count):
-        ss[cycle_count] = cycle_count * cpu.register
+        ss[cycle_count] = cycle_count * cpu.get_register()
     print("advance clock | cycle: {}, register={}, signal_strength={}".format(cycle_count,
                                                                               cpu.register,
-                                                                              cycle_count * cpu.register))
+                                                                              cycle_count * cpu.get_register()))
 
 
 while True:
@@ -25,7 +25,7 @@ while True:
     if command is not None:
         print("set command to {} | cycle: {}, register={}, signal_strength={}".format(command, cycle_count,
                                                                                       cpu.register,
-                                                                                      cycle_count * cpu.register))
+                                                                                      cycle_count * cpu.get_register()))
         cpu.set_command(command)
 
         while not cpu.ready():

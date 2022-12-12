@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Command_Type(Enum):
     """
     command name and cycles to execute
@@ -30,7 +31,6 @@ class CPU:
     clock_cycle = 0
     register = 1
     in_command = False
-    buffer = None
 
     def set_command(self, command):
         self.current_command = command
@@ -38,18 +38,19 @@ class CPU:
         self.in_command = True
 
     def cycle_clock(self):
-        if self.buffer is not None:
-            self.register = self.buffer
-
         self.clock_cycle = self.clock_cycle + 1
         if self.current_command.command_type == Command_Type.ADDX and self.clock_cycle % 2 == 0:
-            self.buffer = self.register + self.current_command.command_param
+            self.register = self.register + self.current_command.command_param
             self.in_command = False
         if self.current_command.command_type == Command_Type.NOOP:
             self.in_command = False
 
+    def get_register(self):
+        return self.register
+
     def ready(self):
         return not self.in_command
+
 
 class CRT:
     pixels = []
@@ -61,7 +62,7 @@ class CRT:
 
     def draw_pixel(self, position, character):
         row_index = position // self.width
-        col_index = position - ( row_index * self.width )
+        col_index = position - (row_index * self.width)
         self.display[row_index][col_index] = character
 
     def draw(self):
@@ -69,5 +70,3 @@ class CRT:
             for col in range(self.width):
                 print(self.display[row][col], end='')
             print()
-
-

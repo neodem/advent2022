@@ -17,16 +17,16 @@ link_locations[8].name = "tail"
 link_locations[8].id = "T"
 tail_visits = set()
 
-p = Plot(50, 50, 20, 20)
-for link_location in link_locations:
-    p.add_location(link_location)
-p.add_location(head_location)
+# p = Plot(50, 50, 20, 20)
+# for link_location in link_locations:
+#     p.add_location(link_location)
+# p.add_location(head_location)
 
-filename = "testb.dat"
+filename = "input.dat"
 commands = common.read_file_as_lines(filename)
 
 print("START: {}, {}".format(head_location.display(), link_locations[8].display()))
-p.print_plot(1)
+#p.print_plot(1)
 
 for command in commands:
     print(command)
@@ -45,4 +45,4 @@ for command in commands:
         print("unique tail visit count: {}".format(len(tail_visits)))
 
     print()
-    p.print_plot(1)
+   # p.print_plot(1)

@@ -101,10 +101,12 @@ class Point:
         self.x = x
         self.y = y
 
-# will draw a plot of dots and overlays (based on Points)
-
 
 class Plot:
+    """
+    will draw a plot of dots and overlays (based on Points)
+    """
+
     overlays = []
 
     # origin values are down and right from the top left
@@ -149,7 +151,6 @@ class Plot:
     def set_point(self, x, y, id):
         p = Point(x, y, "", id)
         self.overlays.append(p)
-
 
 
 def read_file_as_lines(filename):

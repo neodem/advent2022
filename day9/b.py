@@ -19,15 +19,16 @@ link_locations[8].name = "tail"
 link_locations[8].id = "T"
 tail_visits = set()
 
-p = Plot(40, 40)
+p = Plot(15, 15, 13, 2)
 for link_location in link_locations:
     p.add_location(link_location)
 p.add_location(head_location)
 
-filename = "testb.dat"
+filename = "test.dat"
 commands = common.read_file_as_lines(filename)
 
 print("START: {}, {}".format(head_location.display(), link_locations[8].display()))
+p.print_plot(1)
 
 for command in commands:
     print(command)
@@ -37,11 +38,12 @@ for command in commands:
 
     for index in range(distance):
         print("-")
+        prev_head_loc = head_location.copy()
         head_location.move_point(direc)
-        print("move {}: {}, {}".format(head_location.name, head_location.display(), link_locations[8].display()))
+        print("move {} {}: from {} to {}.".format(head_location.name, direc, prev_head_loc, head_location))
         move_links(head_location, link_locations, direc)
         tail_visits.add(link_locations[8])
+        p.print_plot(1)
         print("unique tail visit count: {}".format(len(tail_visits)))
 
-    p.print_plot(1)
     print()

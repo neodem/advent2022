@@ -50,3 +50,24 @@ class CPU:
 
     def ready(self):
         return not self.in_command
+
+class CRT:
+    pixels = []
+
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.display = [['.'] * self.width for i in range(self.height)]
+
+    def draw_pixel(self, position, character):
+        row_index = position // self.width
+        col_index = position - ( row_index * self.width )
+        self.display[row_index][col_index] = character
+
+    def draw(self):
+        for row in range(self.height):
+            for col in range(self.width):
+                print(self.display[row][col], end='')
+            print()
+
+

@@ -13,11 +13,13 @@ ss = {}
 
 
 def determine_character(location, mid_sprite):
-    if location == mid_sprite:
+    row_location = location % 40
+
+    if row_location == mid_sprite:
         return '#'
-    if location == mid_sprite - 1:
+    if row_location == mid_sprite - 1:
         return '#'
-    if location == mid_sprite + 1:
+    if row_location == mid_sprite + 1:
         return '#'
     return '.'
 
@@ -37,7 +39,10 @@ def draw_crt(cycle_count):
     crt.draw_pixel(position, char)
     print("Current CRT row: {}".format(crt.get_row_string(position)))
 
+
 in_addx = False
+
+
 def do_cycle():
     global cycle_count, in_addx
 

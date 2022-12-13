@@ -6,7 +6,7 @@ import functions
 
 CRT_WIDTH = 40
 CRT_HEIGHT = 6
-filename = "test_b.dat"
+filename = "input.dat"
 commands = common.read_file_as_lines(filename)
 cycle_count = 1
 cpu = CPU()
@@ -28,7 +28,8 @@ def determine_character(location, mid_sprite):
 def sprite_position_string(location):
     row = ['.'] * CRT_WIDTH
     row[location] = '#'
-    row[location + 1] = '#'
+    if location + 1 < CRT_WIDTH:
+        row[location + 1] = '#'
     row[location - 1] = '#'
     return ''.join(row)
 

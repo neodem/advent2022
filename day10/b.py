@@ -4,16 +4,18 @@ from classes import CRT
 from classes import Command_Type
 import functions
 
+CRT_WIDTH = 40
+CRT_HEIGHT = 6
 filename = "test_b.dat"
 commands = common.read_file_as_lines(filename)
 cycle_count = 1
 cpu = CPU()
-crt = CRT(40, 6)
+crt = CRT(CRT_WIDTH, CRT_HEIGHT)
 ss = {}
 
 
 def determine_character(location, mid_sprite):
-    row_location = location % 40
+    row_location = location % CRT_WIDTH
 
     if row_location == mid_sprite:
         return '#'
@@ -25,7 +27,7 @@ def determine_character(location, mid_sprite):
 
 
 def sprite_position_string(location):
-    row = ['.'] * 40
+    row = ['.'] * CRT_WIDTH
     row[location] = '#'
     row[location + 1] = '#'
     row[location - 1] = '#'

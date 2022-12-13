@@ -30,15 +30,16 @@ class Monkey:
     def add_item(self, item):
         self.items.enque(item)
 
+    def get_operand_string(self):
+        if self.old:
+            return "itself"
+        return self.operand
+
     def get_operation_string(self):
         if self.operator == "*":
             return 'is multiplied by'
         if self.operator == "+":
             return 'increases by'
-        # if self.operator == "-":
-        #     return 'decreases by'
-        # if self.operator == "/":
-        #     return 'is divided by'
 
     def inspect(self, item):
         if self.operator == "*":
@@ -100,7 +101,7 @@ def handle_item(item, monkey_id, monkeys):
     m = monkeys[monkey_id]
     print("  Monkey inspects an item with a worry level of {}.".format(item))
     new_level = m.inspect(item)
-    print("    Worry level {} {} to {}.".format(m.get_operation_string(), m.operand, new_level))
+    print("    Worry level {} {} to {}.".format(m.get_operation_string(), m.get_operand_string(), new_level))
     bored_level = new_level // 3
     print("    Monkey gets bored with item. Worry level is divided by 3 to {}.".format(bored_level))
     mod = bored_level % m.test
@@ -129,10 +130,12 @@ def process_monkey(monkey_id, monkeys):
         handle_item(item, monkey_id, monkeys)
 
 
-def display_monkeys(monkeys):
+def display_monkeys(monkeys, round_number):
+    print()
+    print("results from round {}".format(round_number))
     for index in range(len(monkeys)):
         m = monkeys[index]
-        print("Monkey {}: {}".format(m.monkey_id, m.items))
+        print("Monkey {}: {}".format(m.monkey_id, m.items.as_list()))
 
 
 def process_round(monkeys, round_num):
@@ -141,9 +144,9 @@ def process_round(monkeys, round_num):
     for index in range(len(monkeys)):
         process_monkey(index, monkeys)
 
-    display_monkeys(monkeys)
+    display_monkeys(monkeys, round_num)
     print()
 
 
-for index in range(2):
-    process_round(monkeys, index)
+for index in range(20):
+    process_round(monkeys, index+1)

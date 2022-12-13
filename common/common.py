@@ -39,6 +39,9 @@ class Queue:
     def as_list(self):
         return self.data
 
+    def is_empty(self):
+        return len(self.data) == 0
+
 
 # will only allow a given size, when full, it will drop the oldest
 class FixedList:

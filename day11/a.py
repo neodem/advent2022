@@ -1,4 +1,5 @@
 import common
+from common import Queue
 import re
 
 
@@ -7,7 +8,7 @@ class Monkey:
 
     def __init__(self, monkey_id, starting_items, operator, operand, test, test_true, test_false):
         self.monkey_id = monkey_id
-        self.items = [int(x) for x in starting_items.split(",")]
+        self.items = self.add_starting_items([int(x) for x in starting_items.split(",")])
         self.operator = operator
         self.operand = self.parse_operand(operand)
         self.test = test
@@ -19,6 +20,37 @@ class Monkey:
             self.old = True
             return 0
         return int(operand)
+
+    def add_starting_items(self, starting_items):
+        q = Queue()
+        for item in starting_items:
+            q.enque(item)
+        return q
+
+    def add_item(self, item):
+        self.items.enque(item)
+
+    def get_operation_string(self):
+        if self.operator == "*":
+            return 'is multiplied by'
+        if self.operator == "+":
+            return 'increases by'
+        # if self.operator == "-":
+        #     return 'decreases by'
+        # if self.operator == "/":
+        #     return 'is divided by'
+
+    def inspect(self, item):
+        if self.operator == "*":
+            if self.old:
+                return item * item
+            else:
+                return item * self.operand
+        if self.operator == "+":
+            if self.old:
+                return item + item
+            else:
+                return item + self.operand
 
 
 monkey_regex = r"Monkey\s(\d+)"
@@ -64,8 +96,37 @@ lines = common.read_file_as_lines(filename)
 monkeys = ingest_monkey_data(lines)
 
 
+def handle_item(item, monkey_id, monkeys):
+    m = monkeys[monkey_id]
+    print("  Monkey inspects an item with a worry level of {}.".format(item))
+    new_level = m.inspect(item)
+    print("    Worry level {} {} to {}.".format(m.get_operation_string(), m.operand, new_level))
+    bored_level = new_level // 3
+    print("    Monkey gets bored with item. Worry level is divided by 3 to {}.".format(bored_level))
+    mod = bored_level % m.test
+
+    test_result = "is not"
+    if mod == 0:
+        test_result = "is"
+        throw_to = m.test_true
+    else:
+        throw_to = m.test_false
+
+    print("    Current worry level {} divisible by {}.".format(test_result, m.test))
+    print("    Item with worry level {} is thrown to monkey {}.".format(bored_level, throw_to))
+
+    monkeys[throw_to].add_item(bored_level)
+
+
 def process_monkey(monkey_id, monkeys):
-    pass
+    m = monkeys[monkey_id]
+    print("Monkey {}:".format(m.monkey_id))
+
+    items = m.items
+
+    while not items.is_empty():
+        item = items.deque()
+        handle_item(item, monkey_id, monkeys)
 
 
 def display_monkeys(monkeys):

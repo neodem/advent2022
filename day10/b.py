@@ -11,7 +11,6 @@ commands = common.read_file_as_lines(filename)
 cycle_count = 1
 cpu = CPU()
 crt = CRT(CRT_WIDTH, CRT_HEIGHT)
-ss = {}
 
 
 def determine_character(location, mid_sprite):

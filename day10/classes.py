@@ -46,12 +46,17 @@ class CPU:
             self.in_command = False
 
     def report(self):
-        if self.current_command.command_type == Command_Type.ADDX and self.clock_cycle == 0:
-            return "begin executing {}".format(self.current_command)
-        if self.current_command.command_type == Command_Type.NOOP and self.clock_cycle == 0:
-            return "executing {}".format(self.current_command)
-        if self.current_command.command_type == Command_Type.ADDX and self.clock_cycle == 2:
-            return "finish executing {} (Register X is now {})".format(self.current_command, self.register)
+        if self.current_command.command_type == Command_Type.ADDX:
+            if self.clock_cycle == 0:
+                return "begin executing {}".format(self.current_command)
+            elif self.clock_cycle == 2:
+                return "finish executing {} (Register X is now {})".format(self.current_command, self.register)
+
+        if self.current_command.command_type == Command_Type.NOOP:
+            if self.clock_cycle == 0:
+                return "executing {}".format(self.current_command)
+            elif self.clock_cycle == 1:
+                return "finish {}".format(self.current_command)
 
     def get_register(self):
         return self.register

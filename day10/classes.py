@@ -48,6 +48,8 @@ class CPU:
     def report(self):
         if self.current_command.command_type == Command_Type.ADDX and self.clock_cycle == 0:
             return "begin executing {}".format(self.current_command)
+        if self.current_command.command_type == Command_Type.NOOP and self.clock_cycle == 0:
+            return "executing {}".format(self.current_command)
         if self.current_command.command_type == Command_Type.ADDX and self.clock_cycle == 2:
             return "finish executing {} (Register X is now {})".format(self.current_command, self.register)
 
@@ -64,7 +66,7 @@ class CRT:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.display = [['.'] * self.width for i in range(self.height)]
+        self.display = [[' '] * self.width for i in range(self.height)]
 
     def draw_pixel(self, position, character):
         row_index = position // self.width

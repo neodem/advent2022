@@ -41,13 +41,18 @@ class Monkey:
 
     def inspect(self, item):
         self.inspect_count = self.inspect_count + 1
+
+        new_worry = None
+
         if self.operator == "*":
             if self.old:
-                return item * item
+                new_worry = item * item
             else:
-                return item * self.operand
+                new_worry = item * self.operand
         if self.operator == "+":
             if self.old:
-                return item + item
+                new_worry = item + item
             else:
-                return item + self.operand
+                new_worry = item + self.operand
+
+        return new_worry

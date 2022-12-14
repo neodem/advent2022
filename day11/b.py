@@ -7,7 +7,8 @@ DEBUG = False
 def handle_item(item, monkey_id, monkeys):
     m = monkeys[monkey_id]
     worry_level = m.inspect(item)
-    mod = worry_level % m.test
+    reduced_worry_level = worry_level - ((worry_level // m.test) * m.test)
+    mod = reduced_worry_level % m.test
     test_result = "is not"
     if mod == 0:
         test_result = "is"
@@ -18,11 +19,11 @@ def handle_item(item, monkey_id, monkeys):
     if DEBUG:
         print("  Monkey inspects an item with a worry level of {}.".format(item))
         print("    Worry level {} {} to {}.".format(m.get_operation_string(), m.get_operand_string(), worry_level))
-        print("    Monkey gets bored with item.")
+        print("    Monkey gets bored with item. Worry level is reduced to {}.".format(reduced_worry_level))
         print("    Current worry level {} divisible by {}.".format(test_result, m.test))
-        print("    Item with worry level {} is thrown to monkey {}.".format(worry_level, throw_to))
+        print("    Item with worry level {} is thrown to monkey {}.".format(reduced_worry_level, throw_to))
 
-    monkeys[throw_to].add_item(worry_level)
+    monkeys[throw_to].add_item(reduced_worry_level)
 
 
 def process_monkey(monkey_id, monkeys):

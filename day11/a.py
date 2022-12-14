@@ -58,6 +58,7 @@ def process_round(monkeys, round_num):
         display_monkeys(monkeys, round_num)
         print()
 
+
 def display_inspection_counts(round_number, monkeys):
     print("== After round {} ==".format(round_number))
     inspections = []

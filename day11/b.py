@@ -69,7 +69,7 @@ def display_inspection_counts(round_number, monkeys):
     return inspections
 
 
-num_rounds = 10000
+num_rounds = 20
 filename = "test.dat"
 lines = common.read_file_as_lines(filename)
 monkeys = functions.ingest_monkey_data(lines)
@@ -77,9 +77,10 @@ monkeys = functions.ingest_monkey_data(lines)
 round_displays = [1, 20, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
 
 for index in range(num_rounds):
-    process_round(monkeys, index + 1)
-    if round_displays.__contains__(index):
-        display_inspection_counts(index, monkeys)
+    round_number = index + 1
+    process_round(monkeys, round_number)
+    if round_displays.__contains__(round_number):
+        display_inspection_counts(round_number, monkeys)
 
 # inspections.sort(reverse=True)
 # print("inspection_counts: {}".format(inspections))

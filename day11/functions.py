@@ -11,7 +11,7 @@ false_regex = r"\s?If false: throw to monkey (\d+)"
 
 
 def ingest_monkey_data(lines):
-    data = {}
+    data = []
 
     index = 0
     while index < len(lines):
@@ -33,7 +33,7 @@ def ingest_monkey_data(lines):
             test_false = int(re.search(false_regex, lines[index + 5]).group(1))
 
             monkey = Monkey(monkey_id, starting_items, operator, operand, test, test_true, test_false)
-            data[monkey_id] = monkey
+            data.append(monkey)
 
         index = index + 1
 

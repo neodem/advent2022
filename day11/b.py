@@ -1,13 +1,18 @@
 import common
 import functions
+import math
 
 DEBUG = False
+
+
+def reduce_worry(worry_level):
+    return worry_level % MOD_FACTOR
 
 
 def handle_item(item, monkey_id, monkeys):
     m = monkeys[monkey_id]
     worry_level = m.inspect(item)
-    reduced_worry_level = worry_level - ((worry_level // m.test) * m.test)
+    reduced_worry_level = reduce_worry(worry_level)
     mod = reduced_worry_level % m.test
     test_result = "is not"
     if mod == 0:
@@ -40,7 +45,7 @@ def process_monkey(monkey_id, monkeys):
 
 def display_monkeys(monkeys, round_number):
     print()
-    print("results from round {}".format(round_number))
+    print("Monkey inventory from round {}".format(round_number))
     for index in range(len(monkeys)):
         m = monkeys[index]
         print("Monkey {}: {}".format(m.monkey_id, m.items.as_list()))
@@ -48,7 +53,8 @@ def display_monkeys(monkeys, round_number):
 
 def process_round(monkeys, round_num):
     if DEBUG:
-        print("round {}".format(round_num))
+        print()
+        print("Round {}:".format(round_num))
         print()
 
     for index in range(len(monkeys)):
@@ -62,7 +68,7 @@ def process_round(monkeys, round_num):
 def display_inspection_counts(round_number, monkeys):
     print("== After round {} ==".format(round_number))
     inspections = []
-    for monkey in monkeys.values():
+    for monkey in monkeys:
         i = monkey.inspect_count
         inspections.append(i)
         print("Monkey {} inspected items {} times.".format(monkey.monkey_id, i))
@@ -71,11 +77,15 @@ def display_inspection_counts(round_number, monkeys):
 
 
 num_rounds = 10_000
-filename = "test.dat"
+filename = "input.dat"
 lines = common.read_file_as_lines(filename)
 monkeys = functions.ingest_monkey_data(lines)
 
-round_displays = [1, 20, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+# I cheated here.. No idea how this works at all, but I think it's related
+# to this : https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+MOD_FACTOR = math.prod([monkey.test for monkey in monkeys])
+
+round_displays = [1, 20, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000]
 
 for index in range(num_rounds):
     round_number = index + 1
@@ -83,9 +93,12 @@ for index in range(num_rounds):
     if round_displays.__contains__(round_number):
         display_inspection_counts(round_number, monkeys)
 
-# inspections.sort(reverse=True)
-# print("inspection_counts: {}".format(inspections))
-#
-# mb = inspections[0] * inspections[1]
-#
-# print("monkey business: {}".format(mb))
+inspections = display_inspection_counts(num_rounds, monkeys)
+inspections.sort(reverse=True)
+
+print()
+print("inspection_counts: {}".format(inspections))
+
+mb = inspections[0] * inspections[1]
+
+print("monkey business: {}".format(mb))

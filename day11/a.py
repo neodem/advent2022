@@ -69,7 +69,7 @@ def display_inspection_counts(round_number, monkeys):
     return inspections
 
 
-filename = "test.dat"
+filename = "input.dat"
 lines = common.read_file_as_lines(filename)
 monkeys = functions.ingest_monkey_data(lines)
 for index in range(20):

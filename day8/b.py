@@ -1,5 +1,5 @@
 import common
-from classes import Matrix
+from common import Matrix
 
 
 def score_to_left(row, col, matrix, size):

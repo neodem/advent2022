@@ -1,16 +1,14 @@
 import common
 import functions
 
+DEBUG = False
+
 
 def handle_item(item, monkey_id, monkeys):
     m = monkeys[monkey_id]
-    print("  Monkey inspects an item with a worry level of {}.".format(item))
     new_level = m.inspect(item)
-    print("    Worry level {} {} to {}.".format(m.get_operation_string(), m.get_operand_string(), new_level))
     bored_level = new_level // 3
-    print("    Monkey gets bored with item. Worry level is divided by 3 to {}.".format(bored_level))
     mod = bored_level % m.test
-
     test_result = "is not"
     if mod == 0:
         test_result = "is"
@@ -18,15 +16,20 @@ def handle_item(item, monkey_id, monkeys):
     else:
         throw_to = m.test_false
 
-    print("    Current worry level {} divisible by {}.".format(test_result, m.test))
-    print("    Item with worry level {} is thrown to monkey {}.".format(bored_level, throw_to))
+    if DEBUG:
+        print("  Monkey inspects an item with a worry level of {}.".format(item))
+        print("    Worry level {} {} to {}.".format(m.get_operation_string(), m.get_operand_string(), new_level))
+        print("    Monkey gets bored with item. Worry level is divided by 3 to {}.".format(bored_level))
+        print("    Current worry level {} divisible by {}.".format(test_result, m.test))
+        print("    Item with worry level {} is thrown to monkey {}.".format(bored_level, throw_to))
 
     monkeys[throw_to].add_item(bored_level)
 
 
 def process_monkey(monkey_id, monkeys):
     m = monkeys[monkey_id]
-    print("Monkey {}:".format(m.monkey_id))
+    if DEBUG:
+        print("Monkey {}:".format(m.monkey_id))
 
     items = m.items
 
@@ -44,13 +47,16 @@ def display_monkeys(monkeys, round_number):
 
 
 def process_round(monkeys, round_num):
-    print("round {}".format(round_num))
-    print()
+    if DEBUG:
+        print("round {}".format(round_num))
+        print()
+
     for index in range(len(monkeys)):
         process_monkey(index, monkeys)
 
-    display_monkeys(monkeys, round_num)
-    print()
+    if DEBUG:
+        display_monkeys(monkeys, round_num)
+        print()
 
 
 filename = "input.dat"
@@ -63,7 +69,7 @@ inspections = []
 for monkey in monkeys.values():
     i = monkey.inspect_count
     inspections.append(i)
-    print("Monkey {} inspected items {} times".format(monkey.monkey_id, i))
+    print("Monkey {} inspected items {} times.".format(monkey.monkey_id, i))
 
 inspections.sort(reverse=True)
 print("inspection_counts: {}".format(inspections))

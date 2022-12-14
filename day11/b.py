@@ -2,6 +2,8 @@ import common
 import functions
 
 
+
+
 def handle_item(item, monkey_id, monkeys):
     m = monkeys[monkey_id]
     print("  Monkey inspects an item with a worry level of {}.".format(item))

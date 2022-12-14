@@ -58,22 +58,27 @@ def process_round(monkeys, round_num):
         display_monkeys(monkeys, round_num)
         print()
 
+def display_inspection_counts(round_number, monkeys):
+    print("== After round {} ==".format(round_number))
+    inspections = []
+    for monkey in monkeys.values():
+        i = monkey.inspect_count
+        inspections.append(i)
+        print("Monkey {} inspected items {} times.".format(monkey.monkey_id, i))
 
-filename = "input.dat"
+    return inspections
+
+
+filename = "test.dat"
 lines = common.read_file_as_lines(filename)
 monkeys = functions.ingest_monkey_data(lines)
 for index in range(20):
     process_round(monkeys, index + 1)
 
-inspections = []
-for monkey in monkeys.values():
-    i = monkey.inspect_count
-    inspections.append(i)
-    print("Monkey {} inspected items {} times.".format(monkey.monkey_id, i))
+inspections = display_inspection_counts(20, monkeys)
 
 inspections.sort(reverse=True)
-print("inspection_counts: {}".format(inspections))
-
 mb = inspections[0] * inspections[1]
 
+print()
 print("monkey business: {}".format(mb))

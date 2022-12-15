@@ -90,51 +90,55 @@ class Node:
             self.f_paths.add(node)
 
 
-def create_data_function(index, value):
-    return Node(index, value)
-
-
-lines = common.read_file_as_lines("test.dat")
-m = IndexedMatrix(lines, create_data_function)
-m.draw_matrix()
-
-nodes = []
-for index in range(m.max_index()):
-    node = m.get_by_index(index)
-
-    if node.value != 'E':
-        right = m.get_right(index)
-        if right is not None and node.can_step_to(right):
-            node.add_connection(right)
-            right.add_back_connection(node)
-
-        left = m.get_left(index)
-        if left is not None and node.can_step_to(left):
-            node.add_connection(left)
-            left.add_back_connection(node)
-
-        up = m.get_above(index)
-        if up is not None and node.can_step_to(up):
-            node.add_connection(up)
-            up.add_back_connection(node)
-
-        down = m.get_below(index)
-        if down is not None and node.can_step_to(down):
-            node.add_connection(down)
-            down.add_back_connection(node)
-
-    nodes.append(node)
-
-for node in nodes:
-    node.print_full()
-
-
 def find_node(nodes, val):
     for node in nodes:
         if node.value == val:
             return node
     return None
 
+
+def create_data_function(index, value):
+    return Node(index, value)
+
+
+def load_nodes(matrix):
+    nodes = []
+    for index in range(matrix.max_index()):
+        node = matrix.get_by_index(index)
+
+        if node.value != 'E':
+            right = matrix.get_right(index)
+            if right is not None and node.can_step_to(right):
+                node.add_connection(right)
+                right.add_back_connection(node)
+
+            left = matrix.get_left(index)
+            if left is not None and node.can_step_to(left):
+                node.add_connection(left)
+                left.add_back_connection(node)
+
+            up = matrix.get_above(index)
+            if up is not None and node.can_step_to(up):
+                node.add_connection(up)
+                up.add_back_connection(node)
+
+            down = matrix.get_below(index)
+            if down is not None and node.can_step_to(down):
+                node.add_connection(down)
+                down.add_back_connection(node)
+
+        nodes.append(node)
+    return nodes
+
+
+lines = common.read_file_as_lines("test.dat")
+matrix = IndexedMatrix(lines, create_data_function)
+matrix.draw_matrix()
+
+nodes = load_nodes(matrix)
+
+for node in nodes:
+    node.print_full()
 
 start_node = find_node(nodes, 'S')
 end_node = find_node(nodes, 'E')

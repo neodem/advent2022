@@ -150,16 +150,17 @@ def set_back_distances(node, distance, passed_nodes=set()):
                 set_back_distances(back_node, distance + 1, passed_nodes)
 
 
-lines = common.read_file_as_lines("test.dat")
+lines = common.read_file_as_lines("input.dat")
 matrix = IndexedMatrix(lines, create_data_function)
 # matrix.draw_matrix()
 
 nodes = load_nodes(matrix)
 
-print_nodes()
+# print_nodes()
 
 end_node = find_node(nodes, 'E')
 set_back_distances(end_node, 1)
 
 start_node = find_node(nodes, 'S')
 print("best distance : {}".format(start_node.distance_to_end))
+# 746 is too high

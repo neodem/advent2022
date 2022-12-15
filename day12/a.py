@@ -59,7 +59,8 @@ class Node:
 
         return self.value
 
-    def can_step(self, other_node):
+    # return True if the self node can proceed forward to the other node
+    def can_step_to(self, other_node):
         # we can step to an equal
         # or one greater
         # or any less
@@ -75,6 +76,10 @@ class Node:
 
         if our_level + 1 == their_level:
             return True
+
+    # return True if the self node is a "back" node of the other node. This means the other node can step to this node
+    def is_a_back_of(self, other_node):
+        return other_node.can_step_to(self)
 
     def add_back_connection(self, node):
         if not self.f_paths.__contains__(node):

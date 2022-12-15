@@ -43,7 +43,7 @@ class Node:
         return "[{}.{}]".format(self.index, self.value)
 
     def print_full(self):
-        print("{} can connect to: {}, back paths to: {}".format(self.__str__(), self.f_paths, self.b_paths))
+        print("{} can move to: {}, back paths from: {}".format(self.__str__(), self.f_paths, self.b_paths))
 
     def set_path_to_end(self, next_node, distance):
         if distance < self.distance_to_end:
@@ -82,12 +82,12 @@ class Node:
         return other_node.can_step_to(self)
 
     def add_back_connection(self, node):
-        if not self.f_paths.__contains__(node):
-            self.b_paths.add(node)
+        # if not self.f_paths.__contains__(node):
+        self.b_paths.add(node)
 
     def add_connection(self, node):
-        if not self.b_paths.__contains__(node):
-            self.f_paths.add(node)
+        # if not self.b_paths.__contains__(node):
+        self.f_paths.add(node)
 
 
 def find_node(nodes, val):
@@ -131,26 +131,31 @@ def load_nodes(matrix):
     return nodes
 
 
-lines = common.read_file_as_lines("test.dat")
+def print_nodes():
+    for node in nodes:
+        node.print_full()
+
+
+def set_back_distances(node, distance, passed_nodes=set()):
+    back_nodes = node.b_paths
+    if back_nodes is not None and len(back_nodes) > 0:
+        for back_node in back_nodes:
+            if not passed_nodes.__contains__(back_node):
+                passed_nodes.add(back_node)
+                back_node.set_path_to_end(node, distance)
+                set_back_distances(back_node, distance + 1, passed_nodes)
+
+
+lines = common.read_file_as_lines("input.dat")
 matrix = IndexedMatrix(lines, create_data_function)
 matrix.draw_matrix()
 
 nodes = load_nodes(matrix)
 
-for node in nodes:
-    node.print_full()
+# print_nodes()
 
 start_node = find_node(nodes, 'S')
 end_node = find_node(nodes, 'E')
-
-
-def set_back_distances(node, distance):
-    back_nodes = node.b_paths
-    if back_nodes is not None and len(back_nodes) > 0:
-        for back_node in back_nodes:
-            back_node.set_path_to_end(node, distance)
-            set_back_distances(back_node, distance + 1)
-
 
 set_back_distances(end_node, 1)
 

@@ -1,5 +1,6 @@
 import common
 from common import Matrix
+import sys
 
 
 class Node:
@@ -10,16 +11,16 @@ class Node:
     value = None
 
     # this is the distance to the end (best case)
-    distance_to_end = None
+    distance_to_end = sys.maxsize
+
+    # this is the path to take to the end (best case)
+    next_node_to_end = None
 
     # forward paths point to Nodes
     f_paths = None
 
     # backward paths point to Nodes
     b_paths = None
-
-    def __str__(self):
-        return "[{}.{}]".format(self.index, self.value)
 
     def __init__(self, index, value):
         self.index = index
@@ -34,6 +35,20 @@ class Node:
         if isinstance(other, Node):
             return self.index == other.index
         return NotImplemented
+
+    def __str__(self):
+        return "[{}.{}]".format(self.index, self.value)
+
+    def __repr__(self):
+        return "[{}.{}]".format(self.index, self.value)
+
+    def print_full(self):
+        print("{} can connect to: {}, back paths to: {}".format(self.__str__(), self.f_paths, self.b_paths))
+
+    def set_path_to_end(self, next_node, distance):
+        if distance < self.distance_to_end:
+            self.distance_to_end = distance
+            self.next_node_to_end = next_node
 
     def get_clean_value(self):
         if self.value == 'S':
@@ -69,14 +84,6 @@ class Node:
         if not self.b_paths.__contains__(node):
             self.f_paths.add(node)
 
-
-# class Maze:
-#
-#     # both point to Node objects
-#     start = None
-#     end = None
-#
-#     def __init__(self, lines):
 
 class IndexedMatrix:
     data = []
@@ -178,6 +185,9 @@ for index in range(m.max_index()):
 
     nodes.append(node)
 
+for node in nodes:
+    node.print_full()
+
 
 def find_node(nodes, val):
     for node in nodes:
@@ -191,16 +201,13 @@ end_node = find_node(nodes, 'E')
 
 
 def set_back_distances(node, distance):
-    back_paths = node.b_paths
-    if back_paths is not None and len(back_paths) > 0:
-        for back_path in back_paths:
-            back_path.distance_to_end = distance
-            set_back_distances(back_path, distance + 1)
+    back_nodes = node.b_paths
+    if back_nodes is not None and len(back_nodes) > 0:
+        for back_node in back_nodes:
+            back_node.set_path_to_end(node, distance)
+            set_back_distances(back_node, distance + 1)
 
 
 set_back_distances(end_node, 1)
 
-print(m.get_by_index(0))
-print(m.get_by_index(1))
-print(m.get_by_index(8))
-print(m.get_by_index(9))
+print("best distance : {}".format(start_node.distance_to_end))

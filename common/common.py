@@ -188,6 +188,76 @@ class Matrix:
         row = self.data[0]
         return len(row)
 
+
+class IndexedMatrix:
+    data = []
+    num_cols = 0
+    num_rows = 0
+
+    def __init__(self, lines, create_data_function):
+        index = 0
+        for line in lines:
+            self.num_rows += 1
+            chars = [char for char in line]
+            self.num_cols = len(chars)
+            for char in chars:
+                node = create_data_function(index, char)
+                self.data.append(node)
+                index += 1
+
+    def max_index(self):
+        return self.num_cols * self.num_rows
+
+    def get_by_index(self, index):
+        return self.data[index]
+
+    def get_by_row_col(self, row, col):
+        if row >= self.num_rows:
+            return None
+        if col >= self.num_cols:
+            return None
+        if row < 0 or col < 0:
+            return None
+
+        index = row * self.num_cols + col
+        return self.get_by_index(index)
+
+    def get_row_from_index(self, index):
+        return index // self.num_cols
+
+    def get_col_from_index(self, index):
+        r = self.get_row_from_index(index)
+        return index - (r * self.num_cols)
+
+    def get_right(self, index):
+        r = self.get_row_from_index(index)
+        c = self.get_col_from_index(index)
+        return self.get_by_row_col(r, c + 1)
+
+    def get_left(self, index):
+        r = self.get_row_from_index(index)
+        c = self.get_col_from_index(index)
+        return self.get_by_row_col(r, c - 1)
+
+    def get_above(self, index):
+        r = self.get_row_from_index(index)
+        c = self.get_col_from_index(index)
+        return self.get_by_row_col(r - 1, c)
+
+    def get_below(self, index):
+        r = self.get_row_from_index(index)
+        c = self.get_col_from_index(index)
+        return self.get_by_row_col(r + 1, c)
+
+    def draw_matrix(self):
+        for r in range(self.num_rows):
+            for c in range(self.num_cols):
+                node = self.get_by_row_col(r, c)
+                print(node.value, end='')
+            print()
+        print()
+
+
 def read_file_as_lines(filename):
     lines = []
     with open(filename) as file:

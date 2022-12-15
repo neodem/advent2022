@@ -1,5 +1,5 @@
 import common
-from common import Matrix
+from common import IndexedMatrix
 import sys
 
 
@@ -90,77 +90,12 @@ class Node:
             self.f_paths.add(node)
 
 
-class IndexedMatrix:
-    data = []
-    num_cols = 0
-    num_rows = 0
-
-    def __init__(self, lines):
-        index = 0
-        for line in lines:
-            self.num_rows += 1
-            chars = [char for char in line]
-            self.num_cols = len(chars)
-            for char in chars:
-                node = Node(index, char)
-                self.data.append(node)
-                index += 1
-
-    def max_index(self):
-        return self.num_cols * self.num_rows
-
-    def get_by_index(self, index):
-        return self.data[index]
-
-    def get_by_row_col(self, row, col):
-        if row >= self.num_rows:
-            return None
-        if col >= self.num_cols:
-            return None
-        if row < 0 or col < 0:
-            return None
-
-        index = row * self.num_cols + col
-        return self.get_by_index(index)
-
-    def get_row_from_index(self, index):
-        return index // self.num_cols
-
-    def get_col_from_index(self, index):
-        r = self.get_row_from_index(index)
-        return index - (r * self.num_cols)
-
-    def get_right(self, index):
-        r = self.get_row_from_index(index)
-        c = self.get_col_from_index(index)
-        return self.get_by_row_col(r, c + 1)
-
-    def get_left(self, index):
-        r = self.get_row_from_index(index)
-        c = self.get_col_from_index(index)
-        return self.get_by_row_col(r, c - 1)
-
-    def get_above(self, index):
-        r = self.get_row_from_index(index)
-        c = self.get_col_from_index(index)
-        return self.get_by_row_col(r - 1, c)
-
-    def get_below(self, index):
-        r = self.get_row_from_index(index)
-        c = self.get_col_from_index(index)
-        return self.get_by_row_col(r + 1, c)
-
-    def draw_matrix(self):
-        for r in range(self.num_rows):
-            for c in range(self.num_cols):
-                node = self.get_by_row_col(r, c)
-                print(node.value, end='')
-            print()
-        print()
+def create_data_function(index, value):
+    return Node(index, value)
 
 
 lines = common.read_file_as_lines("test.dat")
-m = IndexedMatrix(lines)
+m = IndexedMatrix(lines, create_data_function)
 m.draw_matrix()
 
 nodes = []
@@ -169,22 +104,22 @@ for index in range(m.max_index()):
 
     if node.value != 'E':
         right = m.get_right(index)
-        if right is not None and node.can_step(right):
+        if right is not None and node.can_step_to(right):
             node.add_connection(right)
             right.add_back_connection(node)
 
         left = m.get_left(index)
-        if left is not None and node.can_step(left):
+        if left is not None and node.can_step_to(left):
             node.add_connection(left)
             left.add_back_connection(node)
 
         up = m.get_above(index)
-        if up is not None and node.can_step(up):
+        if up is not None and node.can_step_to(up):
             node.add_connection(up)
             up.add_back_connection(node)
 
         down = m.get_below(index)
-        if down is not None and node.can_step(down):
+        if down is not None and node.can_step_to(down):
             node.add_connection(down)
             down.add_back_connection(node)
 

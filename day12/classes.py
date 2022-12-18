@@ -1,4 +1,3 @@
-
 class Node:
     # index is the space in maze
     index = None
@@ -6,12 +5,10 @@ class Node:
     # value is the value of the space
     value = None
 
-    best_path_to_end = None
-
-    def __init__(self, index, value):
+    def __init__(self, index, value, e_val='z'):
         self.index = index
         self.value = value
-        self.f_paths = set()
+        self.e_val = e_val
 
     def __hash__(self):
         return self.index
@@ -27,15 +24,12 @@ class Node:
     def __repr__(self):
         return "[{}.{}]".format(self.index, self.value)
 
-    def print_full(self):
-        print("{} can move to: {}".format(self.__str__(), self.f_paths))
-
     def get_clean_value(self):
         if self.value == 'S':
             return 'a'
 
         if self.value == 'E':
-            return 'z'
+            return self.e_val
 
         return self.value
 
@@ -62,4 +56,46 @@ class Node:
         return other_node.can_step_to(self)
 
     def add_connection(self, node):
-        self.f_paths.add(node)
+        if not self.b_paths.__contains__(node):
+            self.f_paths.add(node)
+            node.b_paths.add(self)
+
+
+class Graph(object):
+    def __init__(self, nodes, init_graph):
+        self.nodes = nodes
+        self.graph = self.construct_graph(nodes, init_graph)
+
+    def construct_graph(self, nodes, init_graph):
+        # '''
+        # This method makes sure that the graph is symmetrical. In other words,
+        #  if there's a path from node A to B with a value V, there needs to be a path from node B to node A with a value V.
+        # '''
+        graph = {}
+        for node in nodes:
+            graph[node] = {}
+
+        graph.update(init_graph)
+
+        # for node, edges in graph.items():
+        #     for adjacent_node, value in edges.items():
+        #         if not graph[adjacent_node].get(node, False):
+        #             graph[adjacent_node][node] = value
+
+        return graph
+
+    def get_nodes(self):
+        "Returns the nodes of the graph."
+        return self.nodes
+
+    def get_outgoing_edges(self, node):
+        "Returns the neighbors of a node."
+        connections = []
+        for out_node in self.nodes:
+            if self.graph[node].get(out_node, False) != False:
+                connections.append(out_node)
+        return connections
+
+    def value(self, node1, node2):
+        "Returns the value of an edge between two nodes."
+        return self.graph[node1][node2]

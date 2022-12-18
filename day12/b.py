@@ -25,11 +25,15 @@ start_node = functions.find_node(nodes, 'S')
 a_nodes = functions.find_nodes_with_value(nodes, 'a')
 end_node = functions.find_node(nodes, 'E')
 
+print("{} a nodes".format(len(a_nodes)))
+
 best_start = None
 best_distance = sys.maxsize
 for a_node in a_nodes:
+    print("testing for : {}. ".format(a_node), end='')
     previous_nodes, shortest_path = functions.dijkstra_algorithm(graph=graph, start_node=a_node)
     distance = shortest_path[end_node]
+    print("Distance = {}".format(distance))
     if distance < best_distance:
         best_distance = distance
         best_start = a_node

@@ -81,7 +81,10 @@ def encode_input(line):
 
 pairs = functions.read_file_to_pairs('test.dat')
 for pair in pairs:
+    print("encoding {} ".format(pair.input1), end='')
     left = encode_input(pair.input1)
-    right = encode_input(pair.input2)
     print(left)
+
+    print("encoding {} ".format(pair.input2), end='')
+    right = encode_input(pair.input2)
     print(right)

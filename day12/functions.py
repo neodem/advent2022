@@ -131,6 +131,13 @@ def find_node(nodes, val):
             return node
     return None
 
+def find_nodes_with_value(nodes, val):
+    found = set()
+    for node in nodes:
+        if node.get_clean_value() == val:
+            found.add(node)
+    return found
+
 
 def print_node_paths(nodes):
     for node in nodes:

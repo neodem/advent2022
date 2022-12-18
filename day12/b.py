@@ -3,13 +3,14 @@ import functions
 import common
 from common import IndexedMatrix
 from classes import Node
+import sys
 
 
 def create_data_function(index, value):
     return Node(index, value)
 
 
-lines = common.read_file_as_lines("test.dat")
+lines = common.read_file_as_lines("input.dat")
 matrix = IndexedMatrix(lines, create_data_function)
 
 nodes = matrix.data
@@ -21,11 +22,17 @@ for node in nodes:
 graph = Graph(nodes, init_graph)
 
 start_node = functions.find_node(nodes, 'S')
+a_nodes = functions.find_nodes_with_value(nodes, 'a')
 end_node = functions.find_node(nodes, 'E')
 
-previous_nodes, shortest_path = functions.dijkstra_algorithm(graph=graph, start_node=start_node)
+best_start = None
+best_distance = sys.maxsize
+for a_node in a_nodes:
+    previous_nodes, shortest_path = functions.dijkstra_algorithm(graph=graph, start_node=a_node)
+    distance = shortest_path[end_node]
+    if distance < best_distance:
+        best_distance = distance
+        best_start = a_node
 
-result = shortest_path[end_node]
-print(result)
 
-# functions.print_result_d(previous_nodes, shortest_path, start_node=start_node, target_node=end_node)
+print(best_distance)

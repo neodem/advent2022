@@ -1,5 +1,6 @@
 import sys
 
+
 def get_next_hops(node, matrix):
     index = node.index
     paths = []
@@ -22,6 +23,7 @@ def get_next_hops(node, matrix):
 
     return paths
 
+
 def find_best_path_to_end(node, matrix, visited=[]):
     best_path = [node]
     visited.append(node)
@@ -39,6 +41,7 @@ def find_best_path_to_end(node, matrix, visited=[]):
     node.best_path_to_end = best_path
 
     return best_path
+
 
 # from : https://www.udacity.com/blog/2021/10/implementing-dijkstras-algorithm-in-python.html
 def dijkstra_algorithm(graph, start_node):
@@ -81,6 +84,7 @@ def dijkstra_algorithm(graph, start_node):
 
     return previous_nodes, shortest_path
 
+
 # from : https://www.udacity.com/blog/2021/10/implementing-dijkstras-algorithm-in-python.html
 def print_result_d(previous_nodes, shortest_path, start_node, target_node):
     path = []
@@ -96,6 +100,37 @@ def print_result_d(previous_nodes, shortest_path, start_node, target_node):
     print("We found the following best path with a value of {}.".format(shortest_path[target_node]))
     path.reverse()
     print(path)
+
+
+def get_next_hops(node, matrix):
+    index = node.index
+    paths = {}
+
+    right = matrix.get_right(index)
+    if right is not None and node.can_step_to(right):
+        paths[right] = 1
+
+    left = matrix.get_left(index)
+    if left is not None and node.can_step_to(left):
+        paths[left] = 1
+
+    up = matrix.get_above(index)
+    if up is not None and node.can_step_to(up):
+        paths[up] = 1
+
+    down = matrix.get_below(index)
+    if down is not None and node.can_step_to(down):
+        paths[down] = 1
+
+    return paths
+
+
+def find_node(nodes, val):
+    for node in nodes:
+        if node.value == val:
+            return node
+    return None
+
 
 def print_node_paths(nodes):
     for node in nodes:

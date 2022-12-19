@@ -70,13 +70,15 @@ class Pair(object):
 
     def compute(self, logging=False):
         if logging:
-            print("== Pair {} ==".format(self.index))
+            print("== Pair {} == : ".format(self.index))
 
         result = self.compare(self.input1, self.input2, logging=logging)
         if result >= 0:
             self.right_order = True
         else:
             self.right_order = False
+
+        print("== Pair {} == : {}".format(self.index, self.right_order))
 
     def compare(self, left, right, indent=0, logging=False, original=True):
         if logging:

@@ -1,6 +1,6 @@
 import functions
 
-pairs = functions.read_file_to_pairs('test.dat')
+pairs = functions.read_file_to_pairs('input.dat')
 
 right_order_index_sum = 0
 

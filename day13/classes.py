@@ -69,38 +69,62 @@ class Pair(object):
         self.input2 = self.parse_string_to_lists(line)
 
     def compute(self):
-        print("compare: {} with {}. ".format(self.input1, self.input2), end='')
+        print("== Pair {} ==".format(self.index))
+
         result = self.compare(self.input1, self.input2)
         if result >= 0:
             self.right_order = True
-
-        if self.right_order:
-            print("right order")
         else:
-            print("not right order")
+            self.right_order = False
 
-    def compare(self, left, right):
+    def compare(self, left, right, indent=0):
+        spaces = " ".join([' ' for _ in range(indent)])
+        print("{}- Compare: {} vs {}".format(spaces, left, right))
+
         # return -1 if left is greater, +1 if right is greater, 0 if the same
 
         # if left and right are single value integers, we have our result
         if type(left) is int and type(right) is int:
-            return right - left
+            result = right - left
+
+            if result > 0:
+                indent += 2
+                spaces = " ".join([' ' for _ in range(indent)])
+                print("{}- Left side is smaller, so inputs are in the right order".format(spaces))
+            if result < 0:
+                indent += 2
+                spaces = " ".join([' ' for _ in range(indent)])
+                print("{}- Right side is smaller, so inputs are not in the right order".format(spaces))
+
+            return result
 
         # if we are here, both aren't int.. if one is a int, the other is a list
         if type(left) is int or type(right) is int:
             if type(left) is int:
-                return self.compare([left], right)
-            return self.compare(left, [right])
+                new_left = [left]
+                indent += 2
+                spaces = " ".join([' ' for _ in range(indent)])
+                print("{}- Mixed types; convert left to {} and retry comparison".format(spaces, new_left))
+                return self.compare(new_left, right, indent=indent)
+
+            new_right = [right]
+            indent += 2
+            spaces = " ".join([' ' for _ in range(indent)])
+            print("{}- Mixed types; convert right to {} and retry comparison".format(spaces, new_right))
+            return self.compare(left, new_right, indent=indent)
 
         # if we are here, both left and right are lists we iterate and compare values
         # type(left) is list and type(right) is list:
         while len(left) > 0:
             if len(right) == 0:
                 # right has run out of items
+                indent += 2
+                spaces = " ".join([' ' for _ in range(indent)])
+                print("{}- Right side ran out of items, so inputs are not in the right order".format(spaces))
                 return -1
             left_val = left.pop(0)
             right_val = right.pop(0)
-            result = self.compare(left_val, right_val)
+            result = self.compare(left_val, right_val, indent=indent + 2)
             if result != 0:
                 return result
 

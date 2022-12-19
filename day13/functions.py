@@ -2,8 +2,6 @@ from classes import Pair
 import common
 
 
-
-
 def read_file_to_pairs(filename):
     lines = common.read_file_as_lines(filename)
     pairs = []

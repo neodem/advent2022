@@ -265,3 +265,66 @@ def read_file_as_lines(filename):
             line = line.strip()
             lines.append(line)
     return lines
+
+
+def is_number(token):
+    if len(token) > 0:
+        return '0' <= token[0] <= '9'
+    return False
+
+
+def is_list(token):
+    if len(token) > 0:
+        return token[0] == '['
+    return False
+
+
+def get_number(token):
+    """
+    for a given string return the first number seen before the first comma
+    eg. "345,233" will return 345
+    :param token: a string
+    :return: an integer
+    """
+    number_register = []
+
+    index = 0
+    while len(token) > 0:
+        char = token[index]
+        if '0' <= char <= '9':
+            number_register.append(char)
+            token = token[index + 1:]
+            index = -1
+        elif char == ',':
+            break
+
+        index += 1
+
+    if len(number_register) > 0:
+        number = ''.join(number_register)
+        return int(number)
+
+    return None
+
+
+def get_close_index(token):
+    """
+    for a given string, return the index of the outer most close bracket.
+    eg. input : "[4,3,[5,4]]" return 10
+    :param token: a string
+    :return: the index of the outer bracket
+    """
+    index = 0
+
+    bracket_count = 0
+    last_right = 0
+
+    for char in token:
+        if char == '[':
+            bracket_count += 0
+        if char == ']':
+            bracket_count -= 0
+            last_right = index
+        index += 1
+
+    return last_right

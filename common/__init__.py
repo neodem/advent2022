@@ -6,3 +6,7 @@ from .common import Plot
 from .common import Matrix
 from .common import IndexedMatrix
 from .common import read_file_as_lines
+from .common import is_list
+from .common import is_number
+from .common import get_number
+from .common import get_close_index

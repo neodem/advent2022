@@ -1,3 +1,4 @@
+import common
 
 
 class Pair(object):
@@ -6,65 +7,55 @@ class Pair(object):
     input2 = None
     right_order = False
 
-    def split_line(self, line):
-        # will break a line into tokens (either numbers or additional lists)
+    @staticmethod
+    def parse_list(token):
+        """
+        parse the string into a list of tokens seperated by commas
+        :param token:
+        :return:
+        """
+        close_index = common.get_close_index(token)
+        clean_string = token[1:close_index]
+        token_register = []
+        if len(clean_string) > 0:
+            # only process commas when out of brackets
+            in_brackets = False
+            bracket_count = 0
+            buffer = []
 
-        # had I had more time I could certainly make this a lot more efficient and elegant. but I don't have time
+            for char in clean_string:
+                buffer.append(char)
+                if char == '[':
+                    in_brackets = True
+                    bracket_count += 0
+                if char == ']':
+                    bracket_count -= 0
+                    if bracket_count == 0:
+                        in_brackets = False
+                if char == "," and not in_brackets:
+                    buffer.pop()  # remove comma
+                    # end of token
+                    buffer_string = ''.join(buffer)
+                    token_register.append(buffer_string)
+                    buffer = []
 
-        tokens = []
+            if len(buffer) > 0:
+                buffer_string = ''.join(buffer)
+                token_register.append(buffer_string)
 
-        number_register = []
-        in_array = False
-        left_index = 0
-        index = 0
-        while len(line) > 0:
-            char = line[index]
-            if char == '[':
-                number_register = []
-                left_index = index
-                in_array = True
-            elif char == ']':
-                # token complete
-                token = line[left_index:index + 1]
-                tokens.append(token)
-                line = line[index + 1:-1]
-                index = -1
-                in_array = False
-            elif '0' <= char <= '9' and not in_array:
-                number_register.append(char)
-                line = line[index + 1:]
-                index = -1
-            elif char == ',':
-                if len(number_register) > 0 and not in_array:
-                    number = ''.join(number_register)
-                    tokens.append(number)
-                    number_register = []
-                    index = -1
+        return token_register
 
-            index += 1
-
-        if len(number_register) > 0 and not in_array:
-            number = ''.join(number_register)
-            tokens.append(number)
-
-        return tokens
-
-    def encode_line(self, line):
-        lefts = line.count('[')
-        rights = line.count(']')
-
-        if lefts == rights and lefts == 1:
-            return line[1:-1].split(',')
-
-        if lefts == rights and lefts == 0:
-            return line
-
-        tokens = self.split_line(line)
-
+    def parse_string_to_lists(self, token):
         result = []
 
-        for token in tokens:
-            result.append(self.encode_line(token))
+        if common.is_list(token):
+            for element in self.parse_list(token):
+                r = self.parse_string_to_lists(element)
+                result.append(r)
+
+        if common.is_number(token):
+            number = common.get_number(token)
+            return number
 
         return result
 
@@ -72,10 +63,10 @@ class Pair(object):
         self.index = index
 
     def set_line1(self, line):
-        self.input1 = self.encode_line(line)
+        self.input1 = self.parse_string_to_lists(line)
 
     def set_line2(self, line):
-        self.input2 = self.encode_line(line)
+        self.input2 = self.parse_string_to_lists(line)
 
     def compute(self):
         print("compare: {} with {}. ".format(self.input1, self.input2), end='')

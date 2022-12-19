@@ -2,73 +2,6 @@ import functions
 import common
 
 
-def split_line(line):
-    # will break a line into tokens (either numbers or additional lists)
-
-    # had I had more time I could certainly make this a lot more efficient and elegant. but I don't have time
-
-    tokens = []
-
-    number_register = []
-    in_array = False
-    left_index = 0
-    index = 0
-    while len(line) > 0:
-        char = line[index]
-        if char == '[':
-            number_register = []
-            left_index = index
-            in_array = True
-        elif char == ']':
-            # token complete
-            token = line[left_index:index + 1]
-            if token == "[]":
-                tokens.append([])
-            else:
-                tokens.append(token)
-            line = line[index + 1:-1]
-            index = -1
-            in_array = False
-        elif '0' <= char <= '9' and not in_array:
-            number_register.append(char)
-            line = line[index + 1:]
-            index = -1
-        elif char == ',':
-            if len(number_register) > 0 and not in_array:
-                number = ''.join(number_register)
-                tokens.append(number)
-                number_register = []
-                index = -1
-
-        index += 1
-
-    if len(number_register) > 0 and not in_array:
-        number = ''.join(number_register)
-        tokens.append(number)
-
-    return tokens
-
-
-def encode_line(line):
-    lefts = line.count('[')
-    rights = line.count(']')
-
-    if lefts == rights and lefts == 1:
-        return line[1:-1].split(',')
-
-    if lefts == rights and lefts == 0:
-        return line
-
-    tokens = split_line(line)
-
-    result = []
-
-    for token in tokens:
-        result.append(encode_line(token))
-
-    return result
-
-
 def get_number(token):
     number_register = []
 
@@ -91,101 +24,82 @@ def get_number(token):
     return None
 
 
-def get_list(token):
-    left_index = 0
+def is_list(token):
+    if len(token) > 0:
+        return token[0] == '['
+    return False
+
+
+def is_number(token):
+    if len(token) > 0:
+        return '0' <= token[0] <= '9'
+    return False
+
+
+def get_close_index(token):
     index = 0
-    while len(token) > 0:
-        char = line[index]
+
+    bracket_count = 0
+    last_right = 0
+
+    for char in token:
         if char == '[':
-            number_register = []
-            left_index = index
-            in_array = True
-        elif char == ']':
-            # token complete
-            token = line[left_index:index + 1]
-            if token == "[]":
-                tokens.append([])
-            else:
-                tokens.append(token)
-            line = line[index + 1:-1]
-            index = -1
-            in_array = False
-        elif '0' <= char <= '9' and not in_array:
-            number_register.append(char)
-            line = line[index + 1:]
-            index = -1
-        elif char == ',':
-            if len(number_register) > 0 and not in_array:
-                number = ''.join(number_register)
-                tokens.append(number)
-                number_register = []
-                index = -1
+            bracket_count += 0
+        if char == ']':
+            bracket_count -= 0
+            last_right = index
+        index += 1
+
+    return last_right
 
 
-def process(token):
-    # return a number or a list
-    character = token[0]
-    if '0' <= character <= '9':
-        return get_number(token)
-    if character == '[' :
-        return get_list(token)
+def parse_list(token):
+    close_index = get_close_index(token)
+    clean_string = token[1:close_index]
+    token_register = []
+    if len(clean_string) > 0:
+        # only process commas when out of brackets
+        in_brackets = False
+        bracket_count = 0
+        buffer = []
+
+        for char in clean_string:
+            buffer.append(char)
+            if char == '[':
+                in_brackets = True
+                bracket_count += 0
+            if char == ']':
+                bracket_count -= 0
+                if bracket_count == 0:
+                    in_brackets = False
+            if char == "," and not in_brackets:
+                buffer.pop()  # remove comma
+                # end of token
+                buffer_string = ''.join(buffer)
+                token_register.append(buffer_string)
+                buffer = []
+
+        if len(buffer) > 0:
+            buffer_string = ''.join(buffer)
+            token_register.append(buffer_string)
+
+    return token_register
 
 
-"""
-[1,1,3,1,1]
+def do_thing(token):
+    result = []
 
-read char
-[ : in array = true
-read umtil ], and process (recurs)
+    if is_list(token):
+        l = parse_list(token)
+        for element in l:
+            r = do_thing(element)
+            result.append(r)
 
-if number, read until comma and return up
+    if is_number(token):
+        number = get_number(token)
+        return number
 
-
-
-
-
-
-1,1,3,1,1
-
-if no brackets, make list of elements, elements are ints
-l[1,1,3,1,1]
-
-
-[[1],[2,3,4]]
-
-strip outermost brackets
-[1],[2,3,4]
-
-token:
-if [ then the stuff in beween until ]
-if number then number
-
-
-[[1],4]
-
-[9]
-[[8,7,6]]
-
-[[4,4],4,4]
-[[4,4],4,4,4]
-
-[7,7,7,7]
-[7,7,7]
-
-[]
-[3]
-
-[[[]]]
-[[]]
-
-[1,[2,[3,[4,[5,6,7]]]],8,9]
-[1,[2,[3,[4,[5,6,0]]]],8,9]
-"""
-
-
-
-
-
+    return result
 
 
 lines = common.read_file_as_lines("test.dat")
@@ -194,8 +108,8 @@ line_mod = 0
 for line in lines:
     if line_mod == 0 or line_mod == 1:
         print("encoding {} as ".format(line), end='')
-        left = encode_line(line)
-        print(left)
+        token = do_thing(line)
+        print(token)
         line_mod += 1
 
     elif line_mod == 2:

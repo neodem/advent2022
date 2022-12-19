@@ -82,21 +82,13 @@ class Pair(object):
     def compare(self, left, right):
         # return -1 if left is greater, +1 if right is greater, 0 if the same
 
-        if type(left) is str and left[0] == '[':
-            left = self.string_to_list(left)
-
-        if type(right) is str and right[0] == '[':
-            right = self.string_to_list(right)
-
         # if left and right are single value integers, we have our result
-        if type(left) is str and type(right) is str:
-            left_int = int(left)
-            right_int = int(right)
-            return right_int - left_int
+        if type(left) is int and type(right) is int:
+            return right - left
 
-        # if we are here, both aren't strings.. if one is a string, the other is a list
-        if type(left) is str or type(right) is str:
-            if type(left) is str:
+        # if we are here, both aren't int.. if one is a int, the other is a list
+        if type(left) is int or type(right) is int:
+            if type(left) is int:
                 return self.compare([left], right)
             return self.compare(left, [right])
 

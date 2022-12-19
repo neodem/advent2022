@@ -75,185 +75,70 @@ class Pair(object):
         self.right_order = self.compare(self.input1, self.input2, logging=logging)
         print("== Pair {} == : {}".format(self.index, self.right_order))
 
-    def compare(self, left, right, logging=False):
-        """
+    def compare(self, left, right, indent=0, logging=False):
+        # return true if in order, false if not, None if inconclusive
+        if logging:
+            spaces = " ".join([' ' for _ in range(indent)])
+            print("{}- Compare: {} vs {}".format(spaces, left, right))
 
-        :param left: a list
-        :param right: a list
-        :param logging:
-        :return: True if lists are "in order"
-        """
-        # return true if in order, false if not
-
-        indent = 0
-        keep_processing = True
-        while keep_processing:
-            if logging:
-                spaces = " ".join([' ' for _ in range(indent)])
-                print("{}- Compare: {} vs {}".format(spaces, left, right))
-
-            # empty left list and right list is in order
-            if len(left) == 0 and len(right) == 0:
+        # if left and right are single value integers, we have our result
+        if type(left) is int and type(right) is int:
+            if right > left:
                 if logging:
+                    indent += 2
                     spaces = " ".join([' ' for _ in range(indent)])
-                    print("{}- Both lists are empty returning true".format(spaces))
+                    print("{}- Left side is smaller, so inputs are in the right order".format(spaces))
                 return True
 
-            # empty left list and right list with values is in order
+            if right < left:
+                if logging:
+                    indent += 2
+                    spaces = " ".join([' ' for _ in range(indent)])
+                    print("{}- Right side is smaller, so inputs are not in the right order".format(spaces))
+                return False
+
+            return None
+
+        # if we are here, both aren't int.. if one is a int, the other is a list, we make it into a list
+        # and try again
+        if type(left) is int or type(right) is int:
+            if type(left) is int:
+                new_left = [left]
+                if logging:
+                    indent += 2
+                    spaces = " ".join([' ' for _ in range(indent)])
+                    print("{}- Mixed types; convert left to {} and retry comparison".format(spaces, new_left))
+                return self.compare(new_left, right, indent=indent, logging=logging)
+
+            new_right = [right]
+            if logging:
+                indent += 2
+                spaces = " ".join([' ' for _ in range(indent)])
+                print("{}- Mixed types; convert right to {} and retry comparison".format(spaces, new_right))
+            return self.compare(left, new_right, indent=indent, logging=logging)
+
+        # if we are here, both left and right are lists we compare them and return result
+        if type(left) is list and type(right) is list:
+
             if len(left) == 0 and len(right) > 0:
                 if logging:
                     spaces = " ".join([' ' for _ in range(indent)])
                     print("{}- Left side ran out of items, so inputs are in the right order".format(spaces))
                 return True
 
-            # empty right list and left list with values is not in order
             if len(right) == 0 and len(left) > 0:
                 if logging:
                     spaces = " ".join([' ' for _ in range(indent)])
                     print("{}- Right side ran out of items, so inputs are not in the right order".format(spaces))
                 return False
 
-            left_val = left.pop(0)
-            right_val = right.pop(0)
+            # we have at least one element in each list
+            while len(left) > 0:
+                left_val = left.pop(0)
+                right_val = right.pop(0)
 
-            if type(left_val) is int and type(right_val) is int:
-                if right_val > left_val:
-                    if logging:
-                        indent += 2
-                        spaces = " ".join([' ' for _ in range(indent)])
-                        print("{}- Left side is smaller, so inputs are in the right order".format(spaces))
-                    return True
+                result = self.compare(left_val, right_val, indent=indent, logging=logging)
+                if result is not None:
+                    return result
 
-                if right_val < left_val:
-                    if logging:
-                        indent += 2
-                        spaces = " ".join([' ' for _ in range(indent)])
-                        print("{}- Right side is smaller, so inputs are not in the right order".format(spaces))
-                    return False
-
-            if type(left_val) is int or type(right_val) is int:
-                if type(left_val) is int:
-                    left_val = [left_val]
-                    if logging:
-                        indent += 2
-                        spaces = " ".join([' ' for _ in range(indent)])
-                        print("{}- Mixed types; convert left to {} and retry comparison".format(spaces, left_val))
-
-                right_val = [right_val]
-                if logging:
-                    indent += 2
-                    spaces = " ".join([' ' for _ in range(indent)])
-                    print("{}- Mixed types; convert right to {} and retry comparison".format(spaces, right_val))
-
-            indent += 2
-
-
-
-
-        #
-        #
-        #
-        #
-        #
-        # # if left and right are single value integers, we have a potential result
-        #
-        #
-        #     return True
-        #
-        # # if we are here, both aren't int.. if one is a int, the other is a list, we make it into a list
-        # # and try again
-        #
-        #
-        # # if we are here, both left and right are lists we compare them and return result
-        # if type(left) is list and type(right) is list:
-        #
-        #     if len(left) == 0 and len(right) > 0:
-        #         if logging:
-        #             spaces = " ".join([' ' for _ in range(indent)])
-        #             print("{}- Left side ran out of items, so inputs are in the right order".format(spaces))
-        #         return True
-        #
-        #     if len(right) == 0 and len(left) > 0:
-        #         if logging:
-        #             spaces = " ".join([' ' for _ in range(indent)])
-        #             print("{}- Right side ran out of items, so inputs are not in the right order".format(spaces))
-        #         return False
-        #
-        #     # we have at least one element in each list
-        #     while len(left) > 0:
-        #         left_val = left.pop(0)
-        #         right_val = right.pop(0)
-        #
-        #         result = self.compare(left_val, right_val, indent=indent, logging=logging)
-        #         if not result:
-        #             return False
-        #
-        #     return True
-
-    # def compare(self, left, right, indent=0, logging=False):
-    #     # return true if in order, false if not
-    #     if logging:
-    #         spaces = " ".join([' ' for _ in range(indent)])
-    #         print("{}- Compare: {} vs {}".format(spaces, left, right))
-    #
-    #     # if left and right are single value integers, we have our result
-    #     if type(left) is int and type(right) is int:
-    #         if right > left:
-    #             if logging:
-    #                 indent += 2
-    #                 spaces = " ".join([' ' for _ in range(indent)])
-    #                 print("{}- Left side is smaller, so inputs are in the right order".format(spaces))
-    #             return True
-    #
-    #         if right < left:
-    #             if logging:
-    #                 indent += 2
-    #                 spaces = " ".join([' ' for _ in range(indent)])
-    #                 print("{}- Right side is smaller, so inputs are not in the right order".format(spaces))
-    #             return False
-    #
-    #         return True
-    #
-    #     # if we are here, both aren't int.. if one is a int, the other is a list, we make it into a list
-    #     # and try again
-    #     if type(left) is int or type(right) is int:
-    #         if type(left) is int:
-    #             new_left = [left]
-    #             if logging:
-    #                 indent += 2
-    #                 spaces = " ".join([' ' for _ in range(indent)])
-    #                 print("{}- Mixed types; convert left to {} and retry comparison".format(spaces, new_left))
-    #             return self.compare(new_left, right, indent=indent, logging=logging)
-    #
-    #         new_right = [right]
-    #         if logging:
-    #             indent += 2
-    #             spaces = " ".join([' ' for _ in range(indent)])
-    #             print("{}- Mixed types; convert right to {} and retry comparison".format(spaces, new_right))
-    #         return self.compare(left, new_right, indent=indent, logging=logging)
-    #
-    #     # if we are here, both left and right are lists we compare them and return result
-    #     if type(left) is list and type(right) is list:
-    #
-    #         if len(left) == 0 and len(right) > 0:
-    #             if logging:
-    #                 spaces = " ".join([' ' for _ in range(indent)])
-    #                 print("{}- Left side ran out of items, so inputs are in the right order".format(spaces))
-    #             return True
-    #
-    #         if len(right) == 0 and len(left) > 0:
-    #             if logging:
-    #                 spaces = " ".join([' ' for _ in range(indent)])
-    #                 print("{}- Right side ran out of items, so inputs are not in the right order".format(spaces))
-    #             return False
-    #
-    #         # we have at least one element in each list
-    #         while len(left) > 0:
-    #             left_val = left.pop(0)
-    #             right_val = right.pop(0)
-    #
-    #             result = self.compare(left_val, right_val, indent=indent, logging=logging)
-    #             if not result:
-    #                 return False
-    #
-    #         return True
+            return None

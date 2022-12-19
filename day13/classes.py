@@ -78,7 +78,7 @@ class Pair(object):
         else:
             self.right_order = False
 
-    def compare(self, left, right, indent=0, logging=False):
+    def compare(self, left, right, indent=0, logging=False, original=True):
         if logging:
             spaces = " ".join([' ' for _ in range(indent)])
             print("{}- Compare: {} vs {}".format(spaces, left, right))
@@ -109,14 +109,14 @@ class Pair(object):
                     indent += 2
                     spaces = " ".join([' ' for _ in range(indent)])
                     print("{}- Mixed types; convert left to {} and retry comparison".format(spaces, new_left))
-                return self.compare(new_left, right, indent=indent, logging=logging)
+                return self.compare(new_left, right, indent=indent, logging=logging, original=False)
 
             new_right = [right]
             if logging:
                 indent += 2
                 spaces = " ".join([' ' for _ in range(indent)])
                 print("{}- Mixed types; convert right to {} and retry comparison".format(spaces, new_right))
-            return self.compare(left, new_right, indent=indent, logging=logging)
+            return self.compare(left, new_right, indent=indent, logging=logging, original=False)
 
         # if we are here, both left and right are lists we iterate and compare values
         # type(left) is list and type(right) is list:
@@ -130,8 +130,13 @@ class Pair(object):
                 return -1
             left_val = left.pop(0)
             right_val = right.pop(0)
-            result = self.compare(left_val, right_val, indent=indent + 2, logging=logging)
+            result = self.compare(left_val, right_val, indent=indent + 2, logging=logging, original=False)
             if result != 0:
                 return result
+
+        if original:
+            indent += 2
+            spaces = " ".join([' ' for _ in range(indent)])
+            print("{}- Left side ran out of items, so inputs are not in the right order".format(spaces))
 
         return 0

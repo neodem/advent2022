@@ -27,9 +27,9 @@ class Pair(object):
                 buffer.append(char)
                 if char == '[':
                     in_brackets = True
-                    bracket_count += 0
+                    bracket_count += 1
                 if char == ']':
-                    bracket_count -= 0
+                    bracket_count -= 1
                     if bracket_count == 0:
                         in_brackets = False
                 if char == "," and not in_brackets:

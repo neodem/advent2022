@@ -23,4 +23,5 @@ def read_file_to_pairs(filename):
             current_pair = Pair(pair_index)
             line_mod = 0
 
+    pairs.append(current_pair)
     return pairs

@@ -66,11 +66,12 @@ class FixedList:
 
 class Point:
 
-    def __init__(self, x, y, name="", id=""):
+    def __init__(self, x, y, name='', identifier='', value=None):
         self.x = x
         self.y = y
         self.name = name
-        self.id = id
+        self.id = identifier
+        self.value = value
 
     def __hash__(self):
         return hash(self.__str__())
@@ -82,6 +83,8 @@ class Point:
         return NotImplemented
 
     def __str__(self):
+        if self.value is not None:
+            return "[{},{} : {}]".format(self.x, self.y, self.value)
         return "[{},{}]".format(self.x, self.y)
 
     def copy(self):
@@ -157,12 +160,12 @@ class Plot:
 
 
 class Matrix:
-    data = []
-
-    def __init__(self, lines):
-        for line in lines:
-            chars = list(line)
-            self.data.append(chars)
+    def __init__(self, lines=None):
+        self.data = []
+        if lines:
+            for line in lines:
+                chars = list(line)
+                self.data.append(chars)
 
     def get_value(self, row, col):
         if row > len(self.data) or row < 0:
@@ -187,6 +190,38 @@ class Matrix:
     def get_num_cols(self):
         row = self.data[0]
         return len(row)
+
+
+class MatrixPlot(object):
+    """
+    index by row, col
+    """
+
+    def __init__(self, num_rows, num_cols, initial_value=''):
+        self.num_rows = num_rows
+        self.num_cols = num_cols
+        self.data = []
+        for row in range(num_rows):
+            for col in range(num_cols):
+                self.data.append(initial_value)
+
+    def insert(self, row, col, node):
+        if row >= self.num_rows or row < 0:
+            raise Exception("row index {} out of range. Max is {}".format(row, self.num_rows))
+        if col >= self.num_cols or col < 0:
+            raise Exception("col index {} out of range. Max is {}".format(col, self.num_cols))
+        index = row * self.num_cols + col
+        self.data[index] = node
+
+    def get_value(self, row, col):
+        if row > len(self.data) or row < 0:
+            return None
+
+        line = self.data[row]
+        if col > len(line) or col < 0:
+            return None
+
+        return line[col]
 
 
 class IndexedMatrix:
@@ -328,6 +363,7 @@ def get_close_index(token):
         index += 1
 
     return last_right
+
 
 def num_scanner(str):
     """

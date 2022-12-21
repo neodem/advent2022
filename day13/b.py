@@ -4,6 +4,7 @@ import copy
 from functools import cmp_to_key
 
 
+# scan the string, return all numbers as a list, disregard all brackets
 def parse_string_to_list_of_numbers(some_string):
     result = []
 

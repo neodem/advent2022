@@ -87,6 +87,9 @@ class Point:
             return "[{},{} : {}]".format(self.x, self.y, self.value)
         return "[{},{}]".format(self.x, self.y)
 
+    def __repr__(self):
+        return self.__str__()
+
     def copy(self):
         return Point(self.x, self.y, self.name)
 
@@ -197,31 +200,54 @@ class MatrixPlot(object):
     index by row, col
     """
 
-    def __init__(self, num_rows, num_cols, initial_value=''):
+    def __init__(self, num_rows, num_cols, row_offset=0, col_offset=0, initial_value=''):
+        """
+
+        :param num_rows:
+        :param num_cols:
+        :param row_offset: for indexing a segment.. this will offset
+        :param col_offset:
+        :param initial_value:
+        """
         self.num_rows = num_rows
         self.num_cols = num_cols
+        self.row_offset = row_offset
+        self.col_offset = col_offset
         self.data = []
         for row in range(num_rows):
             for col in range(num_cols):
                 self.data.append(initial_value)
 
-    def insert(self, row, col, node):
-        if row >= self.num_rows or row < 0:
-            raise Exception("row index {} out of range. Max is {}".format(row, self.num_rows))
-        if col >= self.num_cols or col < 0:
-            raise Exception("col index {} out of range. Max is {}".format(col, self.num_cols))
-        index = row * self.num_cols + col
+    def make_index(self, row, col):
+        actual_row = row - self.row_offset
+        actual_col = col - self.col_offset
+        if actual_row >= self.num_rows or actual_row < 0:
+            raise Exception("row index {} out of range. Max is {}".format(actual_row + self.row_offset,
+                                                                          self.num_rows + self.row_offset))
+        if actual_col >= self.num_cols or actual_col < 0:
+            raise Exception("col index {} out of range. Max is {}".format(actual_col + self.col_offset,
+                                                                          self.num_cols + self.col_offset))
+        index = actual_row * self.num_cols + actual_col
+        return index
+
+    def set_value(self, row, col, node):
+        index = self.make_index(row, col)
         self.data[index] = node
 
     def get_value(self, row, col):
-        if row > len(self.data) or row < 0:
-            return None
+        index = self.make_index(row, col)
+        return self.data[index]
 
-        line = self.data[row]
-        if col > len(line) or col < 0:
-            return None
+    def draw(self):
+        col_min = 0 + self.col_offset
+        col_max = self.num_cols + self.col_offset
+        row_min = 0 + self.row_offset
+        row_max = self.num_cols + self.row_offset
 
-        return line[col]
+        for row_index in range(row_min, row_max):
+            for col_index in range(col_min, col_max):
+                print(self.get_value(row_index, col_index), end='')
+            print()
 
 
 class IndexedMatrix:

@@ -222,10 +222,10 @@ class MatrixPlot(object):
         actual_row = row - self.row_offset
         actual_col = col - self.col_offset
         if actual_row >= self.num_rows or actual_row < 0:
-            raise Exception("row index {} out of range. Max is {}".format(actual_row + self.row_offset,
+            raise IndexError("row index {} out of range. Max is {}".format(actual_row + self.row_offset,
                                                                           self.num_rows + self.row_offset))
         if actual_col >= self.num_cols or actual_col < 0:
-            raise Exception("col index {} out of range. Max is {}".format(actual_col + self.col_offset,
+            raise IndexError("col index {} out of range. Max is {}".format(actual_col + self.col_offset,
                                                                           self.num_cols + self.col_offset))
         index = actual_row * self.num_cols + actual_col
         return index

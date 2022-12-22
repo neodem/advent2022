@@ -6,7 +6,7 @@ import sys
 
 def point_from_token(token):
     coords = token.split(',')
-    return Point(int(coords[0]), int(coords[1]))
+    return Point(int(coords[1]), int(coords[0]))
 
 
 def break_line_into_segs(line):
@@ -29,7 +29,7 @@ def break_line_into_segs(line):
     return segments
 
 
-filename = 'input.dat'
+filename = 'test.dat'
 lines = common.read_file_as_lines(filename)
 
 all_segs = []
@@ -43,7 +43,7 @@ for line in lines:
 clean_segs = []
 max_row = 0
 max_col = 0
-min_row = sys.maxsize
+min_row = 0
 min_col = sys.maxsize
 for seg in all_segs:
     for point in seg:
@@ -52,8 +52,8 @@ for seg in all_segs:
 
         if row > max_row:
             max_row = row
-        if row < min_row:
-            min_row = row
+        # if row < min_row:
+        #     min_row = row
         if col > max_col:
             max_col = col
         if col < min_col:
@@ -85,7 +85,7 @@ for seg in all_segs:
         col_index = from_point.y
 
         row_start = min(from_point.x, to_point.x)
-        row_end = abs(from_point.x - to_point.x) + col_start + 1
+        row_end = abs(from_point.x - to_point.x) + row_start + 1
 
         for row_index in range(row_start, row_end):
             matrix.set_value(row_index, col_index, '#')

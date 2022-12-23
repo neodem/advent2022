@@ -72,7 +72,7 @@ def drop_sand(matrix, row_index, col_index):
 
 
 filename = 'test.dat'
-matrix = functions.loadMatrix(filename)
+[matrix, min_col] = functions.loadMatrix(filename)
 
 matrix.draw()
 

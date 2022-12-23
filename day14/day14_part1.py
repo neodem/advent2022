@@ -88,5 +88,6 @@ while is_open(matrix, 0, 500) and not off_edge:
     # print()
     # matrix.draw(col_min=min_col)
 
+matrix.draw(col_min=min_col)
 print()
 print("num dropped before dropped off edge: {}".format(sand_counter - 1))

@@ -76,9 +76,9 @@ def drop_sand(matrix, row_index, col_index, max_row):
 
 
 filename = 'test.dat'
-[matrix, max_row] = functions.loadMatrix(filename)
+[matrix, min_col, max_row] = functions.loadMatrix(filename)
 
-matrix.draw(0, 10, 490, 504)
+matrix.draw(col_min=min_col)
 
 sand_counter = 0
 off_edge = False
@@ -86,7 +86,7 @@ while is_open(matrix, 0, 500) and not off_edge:
     off_edge = drop_sand(matrix, 0, 500, max_row)
     sand_counter += 1
     print()
-    matrix.draw(0, 10, 490, 504)
+    matrix.draw(col_min=min_col)
 
 print()
-print("sand dropped before edge: {}".format(sand_counter - 1))
+print("num dropped before dropped off edge: {}".format(sand_counter - 1))

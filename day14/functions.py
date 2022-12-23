@@ -44,10 +44,9 @@ def loadMatrix(filename):
         # collect all segments
         all_segs = all_segs + segs
 
-    # find matrix size and convert points
+    # find matrix size
     max_row = 0
     max_col = 0
-    min_row = 0
     min_col = sys.maxsize
     for seg in all_segs:
         for point in seg:
@@ -61,10 +60,10 @@ def loadMatrix(filename):
             if col < min_col:
                 min_col = col
 
-    rows = max_row + 2
-    cols = max_col + 2
+    num_rows = max_row + 2
+    num_cols = max_col + 2
 
-    matrix = MatrixPlot(rows, cols, initial_value='.')
+    matrix = MatrixPlot(num_rows, num_cols, initial_value='.')
 
     # add segments to matrix
     for seg in all_segs:
@@ -92,4 +91,4 @@ def loadMatrix(filename):
             for row_index in range(row_start, row_end):
                 matrix.set_value(row_index, col_index, '#')
 
-    return [matrix, max_row]
+    return [matrix, min_col, max_row]

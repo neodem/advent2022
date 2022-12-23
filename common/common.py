@@ -230,9 +230,17 @@ class MatrixPlot(object):
         index = self.make_index(row, col)
         return self.data[index]
 
-    def draw(self, row_min, row_max, col_min, col_max):
-        for row_index in range(row_min, row_max + 1):
-            for col_index in range(col_min, col_max + 1):
+    def draw(self, row_min=None, row_max=None, col_min=None, col_max=None):
+        if row_min is None:
+            row_min = 0
+        if row_max is None:
+            row_max = self.num_rows
+        if col_min is None:
+            col_min = 0
+        if col_max is None:
+            col_max = self.num_cols
+        for row_index in range(row_min, row_max):
+            for col_index in range(col_min, col_max):
                 print(self.get_value(row_index, col_index), end='')
             print()
 

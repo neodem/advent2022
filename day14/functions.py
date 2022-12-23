@@ -92,3 +92,56 @@ def loadMatrix(filename):
                 matrix.set_value(row_index, col_index, '#')
 
     return [matrix, min_col, max_row]
+
+
+def is_open(matrix, row_index, col_index):
+    """
+    return if a given point is open. in bounds and == '.'
+
+    :param matrix:
+    :param row_index:
+    :param col_index:
+    :return:
+    """
+
+    try:
+        value = matrix.get_value(row_index, col_index)
+    except IndexError:
+        # we are out of bounds
+        return True
+
+    return value == '.'
+
+
+def can_move_down(matrix, row_index, col_index):
+    """
+    can we move down, else left, else right?
+    :param matrix:
+    :param row_index:
+    :param col_index:
+    :return:
+    """
+
+    # check one down
+    down = is_open(matrix, row_index + 1, col_index)
+
+    if not down:
+        left = is_open(matrix, row_index + 1, col_index - 1)
+
+        if not left:
+            return is_open(matrix, row_index + 1, col_index + 1)
+
+    return True
+
+
+def move_down_once(matrix, row_index, col_index):
+    new_row = row_index + 1
+    new_col = col_index
+
+    if not is_open(matrix, new_row, new_col):
+        new_col -= 1
+        if not is_open(matrix, new_row, new_col):
+            new_col += 2
+
+    matrix.set_value(new_row, new_col, 'o')
+    return [new_row, new_col]

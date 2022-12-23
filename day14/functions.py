@@ -56,8 +56,6 @@ def loadMatrix(filename):
 
             if row > max_row:
                 max_row = row
-            # if row < min_row:
-            #     min_row = row
             if col > max_col:
                 max_col = col
             if col < min_col:

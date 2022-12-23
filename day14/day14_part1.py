@@ -1,73 +1,87 @@
 import functions
 
+
+def is_open(matrix, row_index, col_index):
+    """
+    return if a given point is open. in bounds and == '.'
+
+    :param matrix:
+    :param row_index:
+    :param col_index:
+    :return:
+    """
+
+    try:
+        value = matrix.get_value(row_index, col_index)
+    except IndexError:
+        # we are out of bounds
+        return True
+
+    return value == '.'
+
+
+def can_move_down(matrix, row_index, col_index):
+    """
+    can we move down, else left, else right?
+    :param matrix:
+    :param row_index:
+    :param col_index:
+    :return:
+    """
+
+    # check one down
+    down = is_open(matrix, row_index + 1, col_index)
+
+    if not down:
+        left = is_open(matrix, row_index + 1, col_index - 1)
+
+        if not left:
+            return is_open(matrix, row_index + 1, col_index + 1)
+
+    return True
+
+
+def move_down(matrix, row_index, col_index):
+    new_row = row_index + 1
+    new_col = col_index
+
+    if not is_open(matrix, new_row, new_col):
+        new_col -= 1
+        if not is_open(matrix, new_row, new_col):
+            new_col += 2
+
+    matrix.set_value(new_row, new_col, 'o')
+    return [new_row, new_col]
+
+
+def drop_sand(matrix, row_index, col_index):
+    """
+
+    :param matrix:
+    :param row_index:
+    :param col_index:
+    :return:
+    """
+    matrix.set_value(row_index, col_index, 'o')
+    while can_move_down(matrix, row_index, col_index):
+        new_position = move_down(matrix, row_index, col_index)
+        # clear last position
+        matrix.set_value(row_index, col_index, '.')
+        row_index = new_position[0]
+        col_index = new_position[1]
+
+
 filename = 'test.dat'
 matrix = functions.loadMatrix(filename)
 
 matrix.draw()
 
-
-def can_drop(matrix, row_index, col_index):
-    try:
-        value = matrix.get_value(row_index, col_index)
-    except IndexError:
-        # we are out of bounds
-        return False
-
-    if value == 'o' or value == '#':
-        can_drop_left = can_drop(matrix, row_index + 1, col_index - 1)
-        if not can_drop_left:
-            can_drop_right = can_drop(matrix, row_index + 1, col_index + 1)
-
-            if not can_drop_right:
-                return False
-
-        return True
-    return True
-
-
-def drop_sand_one_space(matrix, row_index, col_index):
-    """
-    drop sand into matrix one space down (if possible)
-    :param matrix: can only hold : '.' : empty space, 'o': sand space, '#': block
-    :return: True if we did the drop, False if we couldn't
-    """
-    if can_drop(matrix, row_index, col_index):
-        value = matrix.get_value(row_index, col_index)
-        if value == 'o' or value == '#':
-            # there is something in our way
-
-            # try down and left
-            dropped = drop_sand_one_space(matrix, row_index + 1, col_index - 1)
-            if not dropped:
-                dropped = drop_sand_one_space(matrix, row_index + 1, col_index + 1)
-
-                if not dropped:
-                    # we can go no farther
-                    return False
-
-            return True
-
-        matrix.set_value(row_index, col_index, '+')
-        return True
-
-    return False
-
-
-row_index = 0
-col_index = 500
 sand_counter = 0
-first = True
-value = matrix.get_value(row_index, col_index)
-while value == '.':
-    while can_drop(matrix, row_index, col_index):
-        if not first:
-            matrix.set_value(row_index - 1, col_index, '.')
-        drop_sand_one_space(matrix, row_index, col_index)
-        row_index += 1
-        first = False
+while is_open(matrix, 0, 500):
+    drop_sand(matrix, 0, 500)
     sand_counter += 1
-    row_index = 0
-    first = True
     print()
     matrix.draw()
-    value = matrix.get_value(row_index, col_index)
+
+print()
+print("sand dropped: {}".format(sand_counter))

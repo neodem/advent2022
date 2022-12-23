@@ -56,17 +56,15 @@ def loadMatrix(filename):
 
             if row > max_row:
                 max_row = row
-            if row < min_row:
-               min_row = row
             if col > max_col:
                 max_col = col
             if col < min_col:
                 min_col = col
 
-    rows = max_row - min_row + 1
-    cols = max_col - min_col + 1
+    rows = max_row + 2
+    cols = max_col + 2
 
-    matrix = MatrixPlot(rows, cols, row_offset=0, col_offset=min_col, initial_value='.')
+    matrix = MatrixPlot(rows, cols, initial_value='.')
 
     # add segments to matrix
     for seg in all_segs:
@@ -94,4 +92,4 @@ def loadMatrix(filename):
             for row_index in range(row_start, row_end):
                 matrix.set_value(row_index, col_index, '#')
 
-    return [matrix, min_col]
+    return [matrix, max_row]

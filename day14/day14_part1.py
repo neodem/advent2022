@@ -41,7 +41,7 @@ def can_move_down(matrix, row_index, col_index):
     return True
 
 
-def move_down(matrix, row_index, col_index):
+def move_down_once(matrix, row_index, col_index):
     new_row = row_index + 1
     new_col = col_index
 
@@ -54,7 +54,7 @@ def move_down(matrix, row_index, col_index):
     return [new_row, new_col]
 
 
-def drop_sand(matrix, row_index, col_index):
+def drop_sand(matrix, row_index, col_index, max_row):
     """
 
     :param matrix:
@@ -64,24 +64,29 @@ def drop_sand(matrix, row_index, col_index):
     """
     matrix.set_value(row_index, col_index, 'o')
     while can_move_down(matrix, row_index, col_index):
-        new_position = move_down(matrix, row_index, col_index)
+        new_position = move_down_once(matrix, row_index, col_index)
         # clear last position
         matrix.set_value(row_index, col_index, '.')
         row_index = new_position[0]
         col_index = new_position[1]
+        if row_index > max_row:
+            return True
+
+    return False
 
 
 filename = 'test.dat'
-[matrix, min_col] = functions.loadMatrix(filename)
+[matrix, max_row] = functions.loadMatrix(filename)
 
-matrix.draw()
+matrix.draw(0, 10, 490, 504)
 
 sand_counter = 0
-while is_open(matrix, 0, 500):
-    drop_sand(matrix, 0, 500)
+off_edge = False
+while is_open(matrix, 0, 500) and not off_edge:
+    off_edge = drop_sand(matrix, 0, 500, max_row)
     sand_counter += 1
     print()
-    matrix.draw()
+    matrix.draw(0, 10, 490, 504)
 
 print()
-print("sand dropped: {}".format(sand_counter))
+print("sand dropped before edge: {}".format(sand_counter - 1))

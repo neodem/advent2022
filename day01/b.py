@@ -1,7 +1,7 @@
 calorie_count = []
 elf_total = 0
 
-with open("../day2/rps.dat") as file:
+with open("../day02/rps.dat") as file:
     for line in file:
         line = line.strip()
         if len(line) > 0:

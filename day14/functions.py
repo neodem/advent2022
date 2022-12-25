@@ -60,8 +60,8 @@ def loadMatrix(filename):
             if col < min_col:
                 min_col = col
 
-    num_rows = max_row + 2
-    num_cols = max_col + 2
+    num_rows = max_row + 4
+    num_cols = max_col * 2
 
     matrix = MatrixPlot(num_rows, num_cols, initial_value='.')
 
@@ -91,7 +91,7 @@ def loadMatrix(filename):
             for row_index in range(row_start, row_end):
                 matrix.set_value(row_index, col_index, '#')
 
-    return [matrix, min_col, max_row]
+    return [matrix, min_col, max_col, max_row]
 
 
 def is_open(matrix, row_index, col_index):
@@ -108,7 +108,7 @@ def is_open(matrix, row_index, col_index):
         value = matrix.get_value(row_index, col_index)
     except IndexError:
         # we are out of bounds
-        return True
+        return False
 
     return value == '.'
 

@@ -34,4 +34,4 @@ while functions.is_open(matrix, 0, 500):
 
 matrix.draw()
 print()
-print("num dropped before dropped off edge: {}".format(sand_counter - 1))
+print("num dropped before we filled up: {}".format(sand_counter))
